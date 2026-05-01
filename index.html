@@ -746,6 +746,28 @@
             box-shadow: 0 18px 52px rgba(0,0,0,.55);
         }
 
+        .plan-price {
+            margin: 36px 0 44px;
+        }
+        .plan-price-old {
+            font-size: 14px; font-weight: 300;
+            color: rgba(247,245,241,.25);
+            text-decoration: line-through;
+            letter-spacing: .3px; margin-bottom: 8px;
+        }
+        .plan-price-now {
+            font-family: var(--f-display);
+            font-size: clamp(38px, 4.5vw, 56px);
+            font-weight: 800; letter-spacing: -.035em;
+            line-height: 1; color: var(--paper);
+        }
+        .plan-start .plan-price-now { color: rgba(247,245,241,.55); }
+        .plan-price-label {
+            font-size: 11px; font-weight: 400;
+            letter-spacing: 1.5px; text-transform: uppercase;
+            color: var(--gold); margin-top: 12px; opacity: .8;
+        }
+
         .plans-closing {
             text-align: center; margin-top: 72px;
             font-size: 15px; font-weight: 300; font-style: italic;
@@ -1059,6 +1081,10 @@
             <div class="plan plan-start">
                 <div class="plan-tier">Start</div>
                 <p class="plan-desc">Para quem está começando</p>
+                <div class="plan-price">
+                    <div class="plan-price-old">R$ 199,90</div>
+                    <div class="plan-price-now">R$ 149,90</div>
+                </div>
                 <ul class="plan-features">
                     <li>Acesso ao ebook</li>
                     <li>2 aulas em vídeo</li>
@@ -1072,6 +1098,11 @@
                 <div class="plan-badge">Mais escolhido</div>
                 <div class="plan-tier">Experience</div>
                 <p class="plan-desc">Para quem quer levar a sério</p>
+                <div class="plan-price">
+                    <div class="plan-price-old">R$ 499,90</div>
+                    <div class="plan-price-now">R$ 399,00</div>
+                    <p class="plan-price-label">Oferta de lançamento por tempo limitado</p>
+                </div>
                 <ul class="plan-features">
                     <li>Acesso a ebooks completos</li>
                     <li>Mais de 5 aulas em vídeo</li>
