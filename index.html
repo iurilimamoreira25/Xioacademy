@@ -850,7 +850,13 @@
             .plan-exp { order: -1; }
 
             /* Títulos — reduzir mínimo para não estourar */
-            .h-title { font-size: clamp(42px, 12vw, 168px); letter-spacing: -.03em; }
+            .h-title {
+                font-size: clamp(32px, 10vw, 168px);
+                letter-spacing: -.01em;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                max-width: 100%;
+            }
             .auth-big { font-size: clamp(34px, 9vw, 96px); }
             .cta-h { font-size: clamp(40px, 12vw, 144px); }
             .sec-h { font-size: clamp(28px, 8vw, 64px); }
