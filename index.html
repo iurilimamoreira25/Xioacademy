@@ -331,11 +331,27 @@
             letter-spacing: 3px; text-transform: uppercase;
             color: rgba(247,245,241,.18); margin-bottom: 20px;
         }
+        .f-name-row {
+            display: flex; align-items: center; gap: 14px;
+            margin-bottom: 6px;
+        }
         .f-name {
             font-family: var(--f-display);
             font-size: 26px; font-weight: 800;
             letter-spacing: -.5px; color: var(--paper);
-            margin-bottom: 6px;
+        }
+        .f-ig {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 30px; height: 30px; flex-shrink: 0;
+            border: 1px solid rgba(247,245,241,.14);
+            color: rgba(247,245,241,.3);
+            text-decoration: none;
+            transition: border-color .25s, color .25s, background .25s;
+        }
+        .f-ig:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: rgba(196,174,136,.07);
         }
         .f-role {
             font-size: 11px; font-weight: 400;
@@ -942,13 +958,23 @@
             <div class="founders r d2">
                 <div class="founder">
                     <div class="f-ord">Fundador 01</div>
-                    <div class="f-name">Iuri Moreira</div>
+                    <div class="f-name-row">
+                        <div class="f-name">Iuri Moreira</div>
+                        <a href="https://www.instagram.com/iurimoreiral/" class="f-ig" target="_blank" rel="noopener" aria-label="Instagram de Iuri Moreira">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/></svg>
+                        </a>
+                    </div>
                     <div class="f-role">CEO &amp; Co-fundador</div>
                     <div class="f-bio">Estudante de Odontologia no Brasil. Prova viva de que qualquer pessoa, de qualquer área, pode criar tecnologia com IA — sem depender de um diploma em computação.</div>
                 </div>
                 <div class="founder">
                     <div class="f-ord">Fundador 02</div>
-                    <div class="f-name">Octávio Lobo</div>
+                    <div class="f-name-row">
+                        <div class="f-name">Octávio Lobo</div>
+                        <a href="https://www.instagram.com/octaloboo/" class="f-ig" target="_blank" rel="noopener" aria-label="Instagram de Octávio Lobo">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/></svg>
+                        </a>
+                    </div>
                     <div class="f-role">Co-fundador</div>
                     <div class="f-bio">Estudante de Web Design no Canadá. Une estética e inteligência artificial para criar experiências digitais que impactam — e inspira quem vê que origem não define destino.</div>
                 </div>
