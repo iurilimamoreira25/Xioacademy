@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style>
         /* ============================================
            BASE
@@ -806,6 +807,65 @@
         }
 
         /* ============================================
+           FEEDBACK
+        ============================================ */
+        .fb-wrap {
+            max-width: 640px;
+            margin-top: 64px;
+        }
+        .fb-area {
+            width: 100%; height: 140px;
+            background: rgba(255,255,255,.04);
+            border: 1px solid rgba(255,255,255,.1);
+            color: var(--paper);
+            font-family: var(--f-body);
+            font-size: 15px; font-weight: 300; line-height: 1.7;
+            padding: 28px 32px;
+            resize: none; outline: none;
+            box-sizing: border-box;
+            transition: border-color .25s;
+        }
+        .fb-area::placeholder { color: rgba(247,245,241,.2); }
+        .fb-area:focus { border-color: rgba(247,245,241,.28); }
+
+        .fb-meta {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 14px;
+        }
+        .fb-count {
+            font-family: var(--f-display);
+            font-size: 11px; font-weight: 500;
+            letter-spacing: 1.5px; color: rgba(247,245,241,.22);
+        }
+        .fb-count span { color: rgba(247,245,241,.45); }
+
+        .fb-btn {
+            font-family: var(--f-display);
+            font-size: 12px; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            color: var(--ink); background: var(--paper);
+            border: none; padding: 16px 36px;
+            cursor: pointer;
+            transition: background .25s, transform .25s, box-shadow .25s;
+        }
+        .fb-btn:hover {
+            background: var(--gold-light);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(0,0,0,.4);
+        }
+        .fb-btn:disabled {
+            opacity: .4; cursor: not-allowed;
+            transform: none; box-shadow: none;
+        }
+        .fb-status {
+            margin-top: 18px;
+            font-size: 13px; font-weight: 300; letter-spacing: .5px;
+            min-height: 20px; line-height: 1.5;
+        }
+        .fb-status.ok { color: var(--gold); }
+        .fb-status.err { color: rgba(255,100,100,.65); }
+
+        /* ============================================
            KEYFRAMES
         ============================================ */
         @keyframes up {
@@ -1213,6 +1273,30 @@
 <!-- ============================
      FOOTER
 ============================= -->
+<!-- ============================
+     FEEDBACK
+============================= -->
+<section id="feedback" class="sec sec-dark">
+    <div class="wrap">
+        <div class="eyebrow r" style="color:var(--paper)"><div class="ey-bar"></div><span class="ey-text">Feedback</span></div>
+        <h2 class="sec-h r" style="color:var(--paper)">Sua opinião<br>importa.</h2>
+
+        <div class="fb-wrap r d1">
+            <textarea
+                class="fb-area"
+                id="fb-text"
+                maxlength="200"
+                placeholder="Escreva seu feedback aqui...">
+            </textarea>
+            <div class="fb-meta">
+                <span class="fb-count"><span id="fb-chars">0</span>/200</span>
+                <button class="fb-btn" id="fb-send">Enviar feedback →</button>
+            </div>
+            <div class="fb-status" id="fb-status"></div>
+        </div>
+    </div>
+</section>
+
 <footer>
     <span class="ft-logo">XIO Academy</span>
     <span class="ft-tag">Crie tecnologia com IA</span>
@@ -1272,6 +1356,55 @@
         });
     }, { threshold: .07, rootMargin: '0px 0px -36px 0px' });
     els.forEach(el => io.observe(el));
+
+    /* ---- EMAILJS FEEDBACK ----
+       Antes de usar, configure suas credenciais em https://www.emailjs.com/
+       1. Crie uma conta e adicione um serviço Gmail
+       2. Crie um template com a variável {{message}}
+       3. Substitua os três valores abaixo
+    ------------------------------------------------ */
+    const EMAILJS_PUBLIC_KEY  = 'SEU_PUBLIC_KEY';   // Account → API Keys
+    const EMAILJS_SERVICE_ID  = 'SEU_SERVICE_ID';   // Email Services
+    const EMAILJS_TEMPLATE_ID = 'SEU_TEMPLATE_ID';  // Email Templates
+
+    emailjs.init(EMAILJS_PUBLIC_KEY);
+
+    const fbText   = document.getElementById('fb-text');
+    const fbChars  = document.getElementById('fb-chars');
+    const fbSend   = document.getElementById('fb-send');
+    const fbStatus = document.getElementById('fb-status');
+
+    fbText.addEventListener('input', () => {
+        fbChars.textContent = fbText.value.length;
+    });
+
+    fbSend.addEventListener('click', async () => {
+        const msg = fbText.value.trim();
+
+        if (!msg) {
+            fbStatus.textContent = 'Por favor, escreva algo antes de enviar.';
+            fbStatus.className = 'fb-status err';
+            return;
+        }
+
+        fbSend.disabled = true;
+        fbStatus.textContent = '';
+
+        try {
+            await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+                message: msg
+            });
+            fbStatus.textContent = 'Feedback enviado com sucesso ✓';
+            fbStatus.className = 'fb-status ok';
+            fbText.value = '';
+            fbChars.textContent = '0';
+        } catch (_) {
+            fbStatus.textContent = 'Erro ao enviar. Tente novamente.';
+            fbStatus.className = 'fb-status err';
+        } finally {
+            fbSend.disabled = false;
+        }
+    });
 </script>
 
 </body>
