@@ -28,7 +28,7 @@
             --f-body:    'DM Sans', sans-serif;
         }
 
-        html { scroll-behavior: smooth; font-size: 16px; }
+        html { scroll-behavior: smooth; font-size: 16px; overflow-x: hidden; }
 
         body {
             font-family: var(--f-body);
@@ -832,6 +832,25 @@
             .plans-grid { grid-template-columns: 1fr; }
             .plan { padding: 52px 28px; }
             .plan-exp { order: -1; }
+
+            /* Títulos — reduzir mínimo para não estourar */
+            .h-title { font-size: clamp(42px, 12vw, 168px); letter-spacing: -.03em; }
+            .auth-big { font-size: clamp(34px, 9vw, 96px); }
+            .cta-h { font-size: clamp(40px, 12vw, 144px); }
+            .sec-h { font-size: clamp(28px, 8vw, 64px); }
+
+            /* Ghost do step não causa overflow */
+            .step-ghost { font-size: 100px; bottom: -16px; right: -4px; }
+
+            /* Nav — botão mais compacto para caber ao lado do logo */
+            .n-btn { padding: 10px 18px; font-size: 11px; letter-spacing: 1px; }
+
+            /* Hero — botão e ações em coluna, full width */
+            .h-actions { width: 100%; align-items: flex-start; }
+            .btn-main { width: 100%; text-align: center; padding: 18px 24px; box-sizing: border-box; }
+
+            /* CTA button */
+            .btn-cta { padding: 20px 40px; width: 100%; max-width: 380px; }
         }
     </style>
 </head>
