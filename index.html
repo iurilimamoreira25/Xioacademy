@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>XIO Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet" />
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: auto; }
+    body {
+      background: #0A0A0A; color: #fff;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-weight: 300; line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh; overflow-x: hidden;
+    }
+    ::selection { background: rgba(200,169,110,.25); color:#fff; }
+    ::placeholder { color: rgba(255,255,255,.18); }
+    input, button, textarea { font-family: inherit; }
+    button { cursor: pointer; border: none; outline: none; background: none; }
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 2px; }
+    input:-webkit-autofill, input:-webkit-autofill:focus {
+      -webkit-box-shadow: 0 0 0 1000px #111 inset !important;
+      -webkit-text-fill-color: #fff !important;
+    }
+    @keyframes fadeUp    { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeIn    { from { opacity:0; } to { opacity:1; } }
+    @keyframes shimmer   { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+    @keyframes spin      { to { transform:rotate(360deg); } }
+    @keyframes pulse     { 0%,100%{opacity:.85} 50%{opacity:.25} }
+    @keyframes progBar   { from{transform:scaleX(0)} to{transform:scaleX(1)} }
+    @keyframes pageIn    { from { opacity:0; transform:translateY(10px) scale(.995); } to { opacity:1; transform:translateY(0) scale(1); } }
+    @keyframes marquee   { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    @keyframes floatOrb  { 0%,100% { transform:translateY(0) scale(1); opacity:.7; } 50% { transform:translateY(-28px) scale(1.04); opacity:1; } }
+    @keyframes floatOrb2 { 0%,100% { transform:translateY(0) scale(1); opacity:.5; } 50% { transform:translateY(22px) scale(.97); opacity:.8; } }
+    @keyframes goldPulse { 0%,100% { opacity:.05; } 50% { opacity:.13; } }
+    @keyframes countUp   { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes sealSpin  { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes heroZoom  { from { transform: scale(1.07); } to { transform: scale(1.0); } }
+    .seal-ring-spin { animation: sealSpin 50s linear infinite; transform-box: fill-box; transform-origin: center; }
+
+    .fade-up  { animation: fadeUp .55s cubic-bezier(.16,1,.3,1) both; }
+    .fade-in  { animation: fadeIn .4s ease both; }
+    .page-in  { animation: pageIn .35s cubic-bezier(.16,1,.3,1) both; }
+
+    /* Subtle grain texture */
+    body::after {
+      content: '';
+      position: fixed; inset: 0; width:100%; height:100%;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: .022; pointer-events: none; z-index: 9999; mix-blend-mode: screen;
+    }
+
+    /* Gold button glow */
+    .btn-gold-glow { transition: opacity .2s, box-shadow .35s, transform .2s !important; }
+    .btn-gold-glow:hover:not(:disabled) {
+      box-shadow: 0 0 24px rgba(200,169,110,.45), 0 0 70px rgba(200,169,110,.14) !important;
+      opacity: .92 !important;
+      transform: translateY(-1px) !important;
+    }
+    .btn-gold-glow:active:not(:disabled) { transform: translateY(0) !important; }
+    .btn-ghost-glow { transition: border-color .2s, background .2s, box-shadow .35s, transform .2s !important; }
+    .btn-ghost-glow:hover {
+      box-shadow: 0 0 18px rgba(200,169,110,.12) !important;
+      transform: translateY(-1px) !important;
+    }
+    .btn-ghost-glow:active { transform: translateY(0) !important; }
+    .skeleton {
+      background: linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.09) 50%,rgba(255,255,255,.04) 75%);
+      background-size: 200% 100%; animation: shimmer 1.6s infinite; border-radius: 4px;
+    }
+    .spinner {
+      display: inline-block; width:15px; height:15px;
+      border: 1.5px solid rgba(255,255,255,.15); border-top-color: currentColor;
+      border-radius: 50%; animation: spin .65s linear infinite; flex-shrink:0;
+    }
+    .protected { -webkit-user-select:none; user-select:none; }
+    .prog-bar  { transform-origin: left center; animation: progBar 5s linear forwards; }
+
+    @media (max-width:768px)  { .hide-m { display:none !important; } }
+    @media (min-width:769px)  { .hide-d { display:none !important; } }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+if (typeof pdfjsLib !== 'undefined') pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+// ── Tokens ────────────────────────────────────────────────────────────────────
+const C = {
+  bg:'#0A0A0A', bg2:'#0D0D0D',
+  gold:'#C8A96E', goldDim:'rgba(200,169,110,.1)', goldBd:'rgba(200,169,110,.28)',
+  text:'#fff', sec:'rgba(255,255,255,.58)', ter:'rgba(255,255,255,.28)',
+  bd:'rgba(255,255,255,.08)', bdStr:'rgba(255,255,255,.15)',
+  card:'rgba(255,255,255,.025)', hover:'rgba(255,255,255,.04)',
+  err:'#e05555', ok:'#4faf85',
+};
+
+// ── Data ──────────────────────────────────────────────────────────────────────
+const MODULES = [
+  { id:1, num:'01', title:'Fundamentos', desc:'Base essencial do método XIO para construir sua mentalidade de alto desempenho.',
+    detail:'Nesta fase você destrói as crenças que travam seu crescimento e instala uma estrutura mental que sustenta resultados duradouros. Sem atalhos, sem teorias vazias — apenas o essencial que separa quem chega de quem fica no mesmo lugar.',
+    files:[{id:'f-1-1',name:'Introdução ao Método XIO',type:'video'},{id:'f-1-2',name:'Manual de Fundamentos',type:'pdf'},{id:'f-1-3',name:'Workbook — Semana 1',type:'pdf'}] },
+  { id:2, num:'02', title:'Aplicação Prática', desc:'Projetos reais orientados com feedback direto e implementação no mundo real.',
+    detail:'Você sai do campo das ideias e entra no campo da execução. Cada entrega é um projeto real — não um exercício hipotético. O aprendizado acontece no atrito com a realidade, com orientação direta para não perder tempo errando sozinho.',
+    files:[{id:'f-2-1',name:'Case Studies Vol. I',type:'pdf'},{id:'f-2-2',name:'Workshop de Aplicação',type:'video'},{id:'f-2-3',name:'Template de Projetos',type:'pdf'},{id:'f-2-4',name:'Checklist de Execução',type:'pdf'}] },
+  { id:3, num:'03', title:'Aceleração', desc:'Resultados mensuráveis e posicionamento estratégico para escalar seu impacto.',
+    detail:'Com a base consolidada e a execução em andamento, esta fase te entrega as alavancas de crescimento. Posicionamento, escala e métricas reais — tudo para que você saia do método com um plano claro dos próximos 90 dias.',
+    files:[{id:'f-3-1',name:'Estratégias de Aceleração',type:'video'},{id:'f-3-2',name:'Guia de Posicionamento',type:'pdf'},{id:'f-3-3',name:'Plano de 90 Dias',type:'pdf'}] },
+];
+
+const TESTIMONIALS = [
+  { quote:'Antes do XIO eu consumia conteúdo sem parar e ficava no mesmo lugar. Em 8 semanas de método estruturado, fechei meu maior cliente e reposicionei minha oferta por completo.', name:'Mariana Torres', role:'Consultora de Estratégia' },
+  { quote:'O que diferencia o XIO de tudo que já fiz é a clareza. Sem enrolação, sem teoria vazia. Cada aula tem aplicação direta. Em 3 meses tripliquei minha receita.', name:'Pedro Alves', role:'Empreendedor Digital' },
+  { quote:'Cheguei cética, saí transformada. O método cria uma estrutura de pensamento que você leva para tudo — não é só sobre negócios, é sobre como você opera na vida.', name:'Carolina Lima', role:'Designer de Produto' },
+  { quote:'Já tinha feito dezenas de cursos. O XIO foi o único em que eu consegui aplicar no dia seguinte. A progressão faz sentido, o ritmo é humano, e os resultados são reais.', name:'Thiago Souza', role:'Head de Produto' },
+  { quote:'Em 60 dias saí de R$8k para R$24k mensais. Não é mágica — é método. O XIO me deu o sistema que eu precisava para escalar sem me perder no caminho.', name:'Ana Beatriz Costa', role:'Especialista em Marketing' },
+];
+
+const WHY = [
+  { icon:<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>, title:'Método estruturado', desc:'Não é conteúdo solto. É uma progressão desenhada do zero para gerar resultados na sequência certa.' },
+  { icon:<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, title:'Sem perda de tempo', desc:'Cada módulo foi destilado ao essencial. Você aprende exatamente o que precisa, quando precisa.' },
+  { icon:<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>, title:'Comunidade ativa', desc:'Você não caminha sozinho. A turma é pequena, o ambiente é denso e o suporte é direto.' },
+  { icon:<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>, title:'Resultado mensurável', desc:'Cada fase tem uma entrega concreta. Você sai com projetos reais, não só com conhecimento.' },
+];
+
+const FAQ_DATA = [
+  { q:'Para quem é o método XIO?', a:'Para profissionais que já consomem conteúdo mas não conseguem transformar conhecimento em resultado. Se você sente que está aprendendo muito e evoluindo pouco, o XIO foi feito para você.' },
+  { q:'Preciso ter experiência anterior?', a:'Não. O método foi desenhado para ser acessível a quem está começando e valioso para quem já tem bagagem. A progressão é clara independente do seu ponto de partida.' },
+  { q:'Como funciona o acesso ao curso?', a:'Após a compra, você recebe um e-mail da Kiwify com seus dados de acesso à plataforma. Todo o conteúdo (ebooks e vídeos) fica disponível na área do aluno da Kiwify, com proteção contra compartilhamento.' },
+  { q:'Onde acesso meu curso depois da compra?', a:'Pelo painel da Kiwify em dashboard.kiwify.com.br. Você também recebe o link direto por e-mail logo após o pagamento.' },
+  { q:'Como funciona a mentoria 1:1 do plano Premium?', a:'Após a compra do plano Premium, nossa equipe entra em contato pelo WhatsApp em até 24h para agendar suas 3 sessões de mentoria com Iuri ou Octávio.' },
+  { q:'Posso parcelar?', a:'Sim. O pagamento é feito direto pela Kiwify, com opção de cartão (parcelado em até 12x), Pix ou boleto.' },
+  { q:'Tem garantia?', a:'Sim. 7 dias de garantia incondicional pela Kiwify. Se não gostar, devolvemos 100% do valor sem perguntas.' },
+  { q:'Quanto tempo dura o curso?', a:'O conteúdo foi estruturado para ser concluído em 8 semanas seguindo o ritmo recomendado. Como o acesso é vitalício, você pode avançar no seu tempo.' },
+];
+
+const PLANOS = [
+  {
+    id:'essencial', nome:'Essencial',
+    preco:'R$ 149,90', precoAntigo:'R$ 199,90', parcelado:'ou 3x de R$ 49,97',
+    destaque:false, descricao:'Para quem quer começar do zero, no seu ritmo.',
+    kiwifyUrl:'https://pay.kiwify.com.br/SEU_LINK_ESSENCIAL',
+    features:['Acesso a todos os ebooks da XIO','Material vivo com atualizações','Acesso vitalício','Comunidade XIO'],
+    naoIncluso:['Aulas em vídeo','Mentoria 1:1'],
+  },
+  {
+    id:'premium', nome:'Premium',
+    preco:'R$ 399,90', precoAntigo:'R$ 599,90', parcelado:'ou 6x de R$ 66,65',
+    destaque:true, descricao:'Experiência completa com mentoria pessoal.',
+    kiwifyUrl:'https://pay.kiwify.com.br/SEU_LINK_PREMIUM',
+    features:['Acesso a todos os ebooks da XIO','Material vivo com atualizações','Mais de 5 aulas em vídeo','Projetos práticos guiados','3 sessões de mentoria 1:1 (30min cada)','Com Iuri ou Octávio — direto, sem chatbot','Suporte prioritário e acesso vitalício'],
+    naoIncluso:[],
+  },
+];
+
+const CONTEUDOS = [
+  { id:1, destaque:true,  categoria:'IA Aplicada',  titulo:'10 prompts de IA para vender mais usando ChatGPT',                    autor:'Iuri Moreira',  data:'19/05/2026' },
+  { id:2, destaque:true,  categoria:'Carreira',      titulo:'Como aprendi a programar usando IA — sem decorar sintaxe',             autor:'Iuri Moreira',  data:'12/05/2026' },
+  { id:3, destaque:false, categoria:'Programação',   titulo:'5 ferramentas de IA que todo dev iniciante precisa conhecer',          autor:'Octávio Lobo',  data:'05/05/2026' },
+  { id:4, destaque:false, categoria:'Negócios',      titulo:'Do zero ao primeiro cliente: o passo a passo real',                    autor:'Iuri Moreira',  data:'28/04/2026' },
+  { id:5, destaque:false, categoria:'IA Aplicada',   titulo:'Agentes de IA: o que são e como usar no seu negócio',                  autor:'Iuri Moreira',  data:'20/04/2026' },
+  { id:6, destaque:false, categoria:'Carreira',      titulo:'Por que Parauapebas é o lugar ideal para começar com IA',              autor:'Octávio Lobo',  data:'12/04/2026' },
+];
+const CATEGORIAS_BLOG = ['Todos','IA Aplicada','Carreira','Programação','Negócios'];
+// TODO: substituir gradiente placeholder por imagem real quando as fotos dos artigos forem criadas.
+const CARD_PLACEHOLDER = {
+  'IA Aplicada': 'linear-gradient(135deg,#0b1a10 0%,#0a0a0a 100%)',
+  'Carreira':    'linear-gradient(135deg,#1a1408 0%,#0a0a0a 100%)',
+  'Programação': 'linear-gradient(135deg,#0c0c1a 0%,#0a0a0a 100%)',
+  'Negócios':    'linear-gradient(135deg,#1a0c0e 0%,#0a0a0a 100%)',
+};
+
+// ── Empresas Section ─────────────────────────────────────────────────────────
+const EMPRESAS = [
+  { nome:'Studio+',         src:'studio-mais.png'    },
+  { nome:'Maternar',        src:'maternar.png'        },
+  { nome:'Portal Temper',   src:'portal-temper.png'   },
+  { nome:'Portal Alumínio', src:'portal-aluminio.png' },
+];
+const EMPRESAS_LISTA = [...Array(8)].flatMap(()=>EMPRESAS);
+
+const FILTER_OFF = 'brightness(0) invert(1)';
+const FILTER_ON  = 'brightness(0) invert(1)';
+
+const MarqueeRow = ({ reverse, duration }) => (
+  <div style={{ overflow:'hidden' }}>
+    <div style={{ display:'flex', alignItems:'center', width:'max-content', animation:`marquee ${duration}s linear infinite${reverse?' reverse':''}` }}>
+      {EMPRESAS_LISTA.map((emp,i)=>(
+        <img key={i} src={emp.src} alt={emp.nome}
+          style={{ height:52, width:'auto', objectFit:'contain', filter:FILTER_OFF, opacity:.6, transition:'opacity .3s', padding:'0 40px', display:'block', flexShrink:0 }}
+          onMouseEnter={e=>e.currentTarget.style.opacity='1'}
+          onMouseLeave={e=>e.currentTarget.style.opacity='.6'}
+        />
+      ))}
+    </div>
+  </div>
+);
+
+const EmpresasSection = () => (
+  <div style={{ borderTop:'0.5px solid rgba(255,255,255,.06)', borderBottom:'0.5px solid rgba(255,255,255,.06)', background:'transparent', padding:'40px 0', position:'relative' }}>
+    <div style={{ textAlign:'center', marginBottom:48, position:'relative', zIndex:2 }}>
+      <div style={{ fontSize:'10px', letterSpacing:'.3em', textTransform:'uppercase', color:C.gold, marginBottom:14 }}>
+        Parceiros &amp; Clientes
+      </div>
+      <h2 style={{ fontFamily:SERIF, fontSize:'clamp(22px,2.4vw,30px)', fontWeight:400, color:C.text, letterSpacing:'-.01em', marginBottom:8 }}>
+        Empresas onde a <em style={{ color:C.gold, fontStyle:'italic' }}>XIO</em> está presente
+      </h2>
+      <p style={{ fontSize:'13px', color:'rgba(255,255,255,.4)', fontWeight:300 }}>
+        Marcas que confiam no nosso trabalho
+      </p>
+      <div style={{ width:40, height:1, background:C.gold, margin:'20px auto 0', opacity:.5 }} />
+    </div>
+    <div style={{ display:'flex', flexDirection:'column', gap:20, overflow:'hidden' }}>
+      <MarqueeRow reverse={false} duration={30} />
+      <MarqueeRow reverse={true}  duration={38} />
+    </div>
+    <div style={{ position:'absolute', left:0, top:0, bottom:0, width:150, zIndex:2, background:'linear-gradient(to right, #0A0A0A, transparent)', pointerEvents:'none' }} />
+    <div style={{ position:'absolute', right:0, top:0, bottom:0, width:150, zIndex:2, background:'linear-gradient(to left, #0A0A0A, transparent)', pointerEvents:'none' }} />
+  </div>
+);
+
+// ── O que você recebe ────────────────────────────────────────────────────────
+const SERIF = "'Playfair Display', Georgia, serif";
+
+const FEATURES = [
+  { num:'01', titulo:'Conteúdo curado',  desc:'Ebooks completos sobre IA aplicada — escritos para quem começa do zero e quer chegar longe sem enrolação.' },
+  { num:'02', titulo:'Aulas práticas',   desc:'Mais de 5 vídeos com projetos reais. Você vê sendo feito, entende o raciocínio, e replica por conta própria.' },
+  { num:'03', titulo:'Mentoria 1:1 ao vivo', desc:'Sessões individuais de 30min com Iuri ou Octávio, agendadas direto pelo suporte. Não é chatbot — é conversa real, ajustada à sua jornada.' },
+  { num:'04', titulo:'Comunidade',       desc:'Acesso à futura comunidade XIO — onde alunos trocam projetos, ideias e constroem junto.' },
+  { num:'05', titulo:'Atualizações',     desc:'Material vivo, sempre atualizado. IA muda rápido. O conteúdo acompanha.' },
+  { num:'06', titulo:'Origem',           desc:'Pensado a partir de Parauapebas — com a linguagem, referências e contexto de quem vem daqui.' },
+  { num:'07', titulo:'Networking',       desc:'Conexões reais com quem está construindo IA no Brasil e fora. Dentro da XIO você encontra pessoas que pensam grande, trabalham de verdade e estão dispostas a construir junto.' },
+];
+
+const RecebeSection = () => (
+  <section style={{ padding:'80px 48px' }}>
+    <div style={{ maxWidth:1100, margin:'0 auto' }}>
+      <p style={{ fontSize:'10px', letterSpacing:'.2em', textTransform:'uppercase', marginBottom:32 }}>
+        <span style={{ color:C.gold }}>06</span>{' '}
+        <span style={{ color:'rgba(255,255,255,.4)' }}>O QUE VOCÊ RECEBE</span>
+      </p>
+      <h2 style={{ fontFamily:SERIF, fontSize:'clamp(32px,4vw,52px)', fontWeight:400, lineHeight:1.15, marginBottom:56 }}>
+        Tudo que precisamos ter quando<br />
+        <em style={{ color:C.gold, fontStyle:'italic' }}>começamos do zero.</em>
+      </h2>
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', border:`0.5px solid ${C.bd}`, borderRadius:4, overflow:'hidden' }}>
+        {FEATURES.map((f,i)=>(
+          <div key={i}
+            style={{
+              padding:'28px 24px', background:C.bg, transition:'background .2s',
+              borderRight: (i===3||i===6) ? 'none' : `0.5px solid ${C.bd}`,
+              borderBottom: i < 4 ? `0.5px solid ${C.bd}` : 'none',
+              gridColumn: i===6 ? 'span 2' : undefined,
+            }}
+            onMouseEnter={e=>e.currentTarget.style.background='rgba(255,255,255,.02)'}
+            onMouseLeave={e=>e.currentTarget.style.background=C.bg}
+          >
+            <div style={{ display:'flex', justifyContent:'space-between', marginBottom:20 }}>
+              <span style={{ fontSize:'9px', letterSpacing:'.2em', textTransform:'uppercase', color:'rgba(255,255,255,.2)' }}>FEATURE</span>
+              <span style={{ fontSize:'9px', letterSpacing:'.15em', color:'rgba(255,255,255,.2)' }}>{f.num}</span>
+            </div>
+            <h3 style={{ fontFamily:SERIF, fontSize:'18px', fontWeight:400, color:C.text, marginBottom:12 }}>{f.titulo}</h3>
+            <p style={{ fontSize:'13px', lineHeight:1.75, color:'rgba(255,255,255,.4)', fontWeight:300 }}>{f.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+// ── Planos Section + Page ────────────────────────────────────────────────────
+const PlanosSection = () => (
+  <section style={{ padding:'100px 28px', position:'relative', overflow:'hidden' }}>
+    {/* Ambient background glow */}
+    <div style={{ position:'absolute', top:'50%', left:'50%', transform:'translate(-50%,-50%)', width:800, height:500, background:'radial-gradient(ellipse, rgba(200,169,110,.04) 0%, transparent 68%)', pointerEvents:'none', zIndex:0 }} />
+
+    <div style={{ maxWidth:1100, margin:'0 auto', position:'relative', zIndex:1 }}>
+      {/* Header */}
+      <div style={{ marginBottom:72 }}>
+        <p style={{ fontSize:'10px', letterSpacing:'.22em', textTransform:'uppercase', marginBottom:28 }}>
+          <span style={{ color:C.gold }}>07</span>{' '}
+          <span style={{ color:'rgba(255,255,255,.35)' }}>ESCOLHA SEU PLANO</span>
+        </p>
+        <h2 style={{ fontFamily:SERIF, fontSize:'clamp(32px,4vw,52px)', fontWeight:400, lineHeight:1.15, marginBottom:16 }}>
+          Dois caminhos.<br />
+          <em style={{ color:C.gold, fontStyle:'italic' }}>Um destino.</em>
+        </h2>
+        <p style={{ fontSize:'15px', color:C.sec, lineHeight:1.7, maxWidth:400, fontWeight:300 }}>
+          Comece pelo plano que faz sentido pra você agora.
+        </p>
+      </div>
+
+      {/* Cards */}
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(300px,1fr))', gap:20, maxWidth:820, alignItems:'stretch' }}>
+        {PLANOS.map(plano=>(
+          <div key={plano.id}
+            style={{
+              position:'relative', borderRadius:8,
+              padding:'48px 40px',
+              display:'flex', flexDirection:'column',
+              background: plano.destaque
+                ? 'linear-gradient(150deg, rgba(200,169,110,.05) 0%, rgba(200,169,110,.01) 60%, transparent 100%)'
+                : C.bg,
+              border: plano.destaque
+                ? '1px solid rgba(200,169,110,.32)'
+                : `0.5px solid ${C.bd}`,
+              boxShadow: plano.destaque
+                ? '0 0 80px rgba(200,169,110,.09), 0 0 200px rgba(200,169,110,.04), 0 20px 60px rgba(0,0,0,.45)'
+                : '0 8px 40px rgba(0,0,0,.25)',
+              transition:'border-color .35s, box-shadow .35s',
+            }}
+            onMouseEnter={e=>{
+              if (plano.destaque) {
+                e.currentTarget.style.boxShadow = '0 0 110px rgba(200,169,110,.14), 0 0 260px rgba(200,169,110,.06), 0 20px 60px rgba(0,0,0,.45)';
+              } else {
+                e.currentTarget.style.borderColor = C.goldBd;
+                e.currentTarget.style.boxShadow = '0 0 40px rgba(200,169,110,.06), 0 8px 40px rgba(0,0,0,.3)';
+              }
+            }}
+            onMouseLeave={e=>{
+              if (plano.destaque) {
+                e.currentTarget.style.boxShadow = '0 0 80px rgba(200,169,110,.09), 0 0 200px rgba(200,169,110,.04), 0 20px 60px rgba(0,0,0,.45)';
+              } else {
+                e.currentTarget.style.borderColor = C.bd;
+                e.currentTarget.style.boxShadow = '0 8px 40px rgba(0,0,0,.25)';
+              }
+            }}
+          >
+            {/* Premium top hairline */}
+            {plano.destaque && (
+              <div style={{ position:'absolute', top:0, left:'10%', right:'10%', height:'1px', background:`linear-gradient(90deg, transparent, ${C.gold}, transparent)`, borderRadius:1 }} />
+            )}
+
+            {/* Plan header */}
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:10 }}>
+              <div style={{ fontFamily:SERIF, fontSize:'24px', fontWeight:400, color:C.text, letterSpacing:'-.01em' }}>{plano.nome}</div>
+              {plano.destaque && (
+                <div style={{ fontSize:'9px', letterSpacing:'.16em', color:C.gold, border:'0.5px solid rgba(200,169,110,.28)', padding:'4px 10px', borderRadius:2, textTransform:'uppercase', whiteSpace:'nowrap' }}>
+                  Recomendado
+                </div>
+              )}
+            </div>
+
+            {/* Description */}
+            <div style={{ fontSize:'13px', color:'rgba(255,255,255,.4)', fontStyle:'italic', lineHeight:1.6, marginBottom:40 }}>{plano.descricao}</div>
+
+            {/* Price block */}
+            <div style={{ marginBottom:40 }}>
+              <div style={{ fontSize:'12px', color:'rgba(255,255,255,.25)', letterSpacing:'.02em', textDecoration:'line-through', textDecorationColor:'rgba(255,255,255,.2)', marginBottom:8, fontWeight:300 }}>
+                {plano.precoAntigo}
+              </div>
+              <div style={{ fontFamily:SERIF, fontSize:'clamp(36px,5vw,48px)', fontWeight:400, fontStyle:'italic', color: plano.destaque ? C.gold : C.text, letterSpacing:'-.02em', lineHeight:1 }}>
+                {plano.preco}
+              </div>
+              <div style={{ fontSize:'11px', color:'rgba(255,255,255,.25)', marginTop:10, letterSpacing:'.03em', fontWeight:300 }}>{plano.parcelado}</div>
+            </div>
+
+            {/* Divider */}
+            <div style={{ width:28, height:'0.5px', background:C.gold, marginBottom:36, opacity: plano.destaque ? .85 : .4 }} />
+
+            {/* Features */}
+            <div style={{ flex:1, display:'flex', flexDirection:'column', gap:13, marginBottom:40 }}>
+              {plano.features.map((f,i)=>(
+                <div key={i} style={{ display:'flex', gap:12, alignItems:'flex-start' }}>
+                  <span style={{ color:C.gold, fontSize:'11px', flexShrink:0, marginTop:2, opacity:.85 }}>✓</span>
+                  <span style={{ fontSize:'13px', color:'rgba(255,255,255,.72)', lineHeight:1.5, fontWeight:300 }}>{f}</span>
+                </div>
+              ))}
+              {plano.naoIncluso.map((f,i)=>(
+                <div key={i} style={{ display:'flex', gap:12, alignItems:'flex-start' }}>
+                  <span style={{ color:'rgba(255,255,255,.18)', fontSize:'11px', flexShrink:0, marginTop:2 }}>—</span>
+                  <span style={{ fontSize:'13px', color:'rgba(255,255,255,.2)', lineHeight:1.5, fontWeight:300 }}>{f}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* CTA */}
+            <a href={plano.kiwifyUrl} target="_blank" rel="noopener noreferrer"
+              className={plano.destaque ? 'btn-gold-glow' : ''}
+              style={{
+                display:'block', textAlign:'center', textDecoration:'none', borderRadius:3,
+                padding:'16px',
+                fontSize:'11px', letterSpacing:'.14em', fontWeight:500, textTransform:'uppercase',
+                background: plano.destaque ? C.gold : 'transparent',
+                color: plano.destaque ? '#0A0A0A' : C.gold,
+                border: plano.destaque ? 'none' : '0.5px solid rgba(200,169,110,.32)',
+                transition:'background .25s, border-color .25s, opacity .2s, box-shadow .35s, transform .2s',
+              }}
+              onMouseEnter={e=>{ if(!plano.destaque){ e.currentTarget.style.background='rgba(200,169,110,.06)'; e.currentTarget.style.borderColor=C.gold; } }}
+              onMouseLeave={e=>{ if(!plano.destaque){ e.currentTarget.style.background='transparent'; e.currentTarget.style.borderColor='rgba(200,169,110,.32)'; } }}
+            >
+              {plano.destaque ? 'Garantir minha vaga' : 'Começar com Essencial'}
+            </a>
+
+            {plano.destaque && (
+              <p style={{ textAlign:'center', marginTop:14, fontSize:'11px', color:'rgba(255,255,255,.22)', letterSpacing:'.04em' }}>
+                Garantia de 7 dias — sem perguntas
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Trust bar */}
+      <div style={{ marginTop:56, paddingTop:32, borderTop:`0.5px solid ${C.bd}`, display:'flex', flexWrap:'wrap', gap:'20px 40px', justifyContent:'space-between', alignItems:'center' }}>
+        <p style={{ fontSize:'12px', color:'rgba(255,255,255,.28)', fontWeight:300, lineHeight:1.6 }}>
+          Pagamento seguro via Kiwify — Pix, cartão ou boleto.
+        </p>
+        <div style={{ display:'flex', flexWrap:'wrap', gap:'8px 24px' }}>
+          {['7 dias de garantia','Acesso imediato','Suporte pelo WhatsApp'].map((t,i)=>(
+            <div key={i} style={{ display:'flex', alignItems:'center', gap:7 }}>
+              <span style={{ width:3, height:3, borderRadius:'50%', background:C.gold, opacity:.55, flexShrink:0 }} />
+              <span style={{ fontSize:'11px', color:'rgba(255,255,255,.32)', letterSpacing:'.04em' }}>{t}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
+const PlanosPage = ({ setPage }) => (
+  <div style={{ background:C.bg, minHeight:'100vh' }}>
+    <div style={{ paddingTop:'clamp(80px,10vw,100px)' }}>
+      <PlanosSection />
+    </div>
+    <Footer setPage={setPage} />
+  </div>
+);
+
+// ── Guarantee Section ────────────────────────────────────────────────────────
+const GuaranteeSection = () => {
+  const ref = useRef(null);
+  const [vis, setVis] = useState(false);
+  useEffect(() => {
+    const el = ref.current; if (!el) return;
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVis(true); obs.disconnect(); } }, { threshold:.2 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <section ref={ref} style={{ padding:'clamp(100px,14vw,160px) clamp(28px,6vw,80px)', borderTop:`0.5px solid ${C.bd}`, position:'relative', overflow:'hidden' }}>
+      {/* Ambient light */}
+      <div style={{ position:'absolute', top:'50%', left:'28%', transform:'translate(-50%,-50%)', width:640, height:640, background:'radial-gradient(circle, rgba(200,169,110,.048) 0%, transparent 65%)', pointerEvents:'none' }} />
+
+      <div style={{ maxWidth:1100, margin:'0 auto', display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(320px,1fr))', gap:'clamp(64px,8vw,128px)', alignItems:'center' }}>
+
+        {/* ── Seal ── */}
+        <div style={{ display:'flex', justifyContent:'center', alignItems:'center', opacity:vis?1:0, transform:vis?'translateY(0)':'translateY(28px)', transition:'opacity .95s .1s, transform .95s .1s cubic-bezier(.16,1,.3,1)' }}>
+          <div style={{ position:'relative', animation:'floatOrb 9s ease-in-out infinite' }}>
+            {/* Outer glow halo */}
+            <div style={{ position:'absolute', inset:-28, borderRadius:'50%', background:'radial-gradient(circle, rgba(200,169,110,.1) 0%, transparent 65%)', pointerEvents:'none' }} />
+            <svg viewBox="0 0 220 220" width="268" height="268" style={{ position:'relative', zIndex:1, display:'block' }}>
+              <defs>
+                {/* Top-half arc for circular text */}
+                <path id="sealArc" d="M 14,110 a 96,96 0 0,1 192,0"/>
+              </defs>
+
+              {/* Outer thin ring */}
+              <circle cx="110" cy="110" r="107" fill="none" stroke="rgba(200,169,110,.22)" strokeWidth=".5"/>
+              {/* Dashed middle ring — slowly rotates */}
+              <circle cx="110" cy="110" r="96" fill="none" stroke="rgba(200,169,110,.1)" strokeWidth=".5" strokeDasharray="1.5 5.5" className="seal-ring-spin"/>
+              {/* Inner ring */}
+              <circle cx="110" cy="110" r="85" fill="none" stroke="rgba(200,169,110,.16)" strokeWidth=".5"/>
+
+              {/* Circular text along top arc */}
+              <text fill="rgba(200,169,110,.52)" fontFamily="Inter,sans-serif" fontSize="7.8" fontWeight="400">
+                <textPath href="#sealArc" startOffset="50%" textAnchor="middle" letterSpacing="4.2">
+                  XIO ACADEMY • GARANTIA • SETE DIAS •
+                </textPath>
+              </text>
+
+              {/* Large "7" */}
+              <text x="110" y="106" textAnchor="middle"
+                fontFamily="'Playfair Display',Georgia,serif"
+                fontSize="64" fontWeight="400" fontStyle="italic"
+                fill="#C8A96E" letterSpacing="-2">7</text>
+
+              {/* "DIAS" label */}
+              <text x="110" y="130" textAnchor="middle"
+                fontFamily="Inter,sans-serif"
+                fontSize="7.5" fontWeight="400"
+                fill="rgba(200,169,110,.42)" letterSpacing="6.5">DIAS</text>
+
+              {/* Decorative dot below label */}
+              <circle cx="110" cy="145" r="1.5" fill="rgba(200,169,110,.32)"/>
+
+              {/* Four corner tick marks at cardinal points */}
+              <line x1="110" y1="2" x2="110" y2="10" stroke="rgba(200,169,110,.28)" strokeWidth=".8"/>
+              <line x1="218" y1="110" x2="210" y2="110" stroke="rgba(200,169,110,.28)" strokeWidth=".8"/>
+              <line x1="110" y1="218" x2="110" y2="210" stroke="rgba(200,169,110,.28)" strokeWidth=".8"/>
+              <line x1="2" y1="110" x2="10" y2="110" stroke="rgba(200,169,110,.28)" strokeWidth=".8"/>
+            </svg>
+          </div>
+        </div>
+
+        {/* ── Content ── */}
+        <div style={{ opacity:vis?1:0, transform:vis?'translateY(0)':'translateY(28px)', transition:'opacity .95s .3s, transform .95s .3s cubic-bezier(.16,1,.3,1)' }}>
+          <h2 style={{ fontFamily:SERIF, fontSize:'clamp(28px,3.6vw,46px)', fontWeight:400, lineHeight:1.18, letterSpacing:'-.02em', marginBottom:28 }}>
+            Sete dias para experimentar.<br />
+            <em style={{ color:C.gold, fontStyle:'italic' }}>Zero perguntas</em>{' '}se quiser sair.
+          </h2>
+
+          <p style={{ fontSize:'clamp(14px,1.5vw,16px)', color:C.sec, lineHeight:1.85, fontWeight:300, marginBottom:52, maxWidth:440 }}>
+            Entre na XIO, leia os ebooks, assista às aulas e explore a plataforma sem pressão. Se em até sete dias você sentir que não é para você, devolvemos cada centavo. Sem burocracia, sem perguntas, sem complicação.
+          </p>
+
+          {/* Tags */}
+          <div style={{ display:'flex', flexWrap:'wrap', gap:10 }}>
+            {['Reembolso integral','Sem burocracia','Cancelamento simples'].map((tag,i)=>(
+              <div key={i} style={{
+                padding:'8px 20px',
+                border:'0.5px solid rgba(200,169,110,.22)',
+                borderRadius:2,
+                fontSize:'10px', letterSpacing:'.18em', textTransform:'uppercase',
+                color:'rgba(200,169,110,.62)', fontWeight:400,
+                background:'rgba(200,169,110,.03)',
+              }}>{tag}</div>
+            ))}
+          </div>
+        </div>
+
+      </div>
+    </section>
+  );
+};
+
+// ── Stats Bar ────────────────────────────────────────────────────────────────
+const PILLARS = [
+  { num:'01', title:'Projetos reais',        desc:'Nada é hipotético. Cada módulo entrega um projeto concreto — construído por você, com orientação direta. O aprendizado acontece no atrito com a realidade, não na passividade de assistir aulas.' },
+  { num:'02', title:'Foco em execução',      desc:'O conteúdo foi destilado para eliminar o que não gera resultado. Você aprende o que precisa, quando precisa — sem enrolação, sem teoria pela teoria.' },
+  { num:'03', title:'Mentoria estratégica',  desc:'No plano Premium, você tem acesso direto a Iuri ou Octávio. Não é suporte genérico — é orientação aplicada à sua jornada, agendada em até 24h.' },
+];
+
+const CredibilitySection = () => {
+  const ref = useRef(null);
+  const [vis, setVis] = useState(false);
+  useEffect(() => {
+    const el = ref.current; if (!el) return;
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVis(true); obs.disconnect(); } }, { threshold:.15 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  return (
+    <div ref={ref} style={{ borderTop:`0.5px solid ${C.bd}`, borderBottom:`0.5px solid ${C.bd}` }}>
+      <div style={{ maxWidth:1160, margin:'0 auto', padding:'0 28px' }}>
+
+        {/* ── Headline row ── */}
+        <div style={{
+          padding:'clamp(52px,7vw,84px) 0 clamp(40px,5vw,64px)',
+          display:'flex', flexWrap:'wrap', gap:'clamp(24px,5vw,80px)',
+          alignItems:'flex-end', justifyContent:'space-between',
+          opacity:vis?1:0, transform:vis?'translateY(0)':'translateY(14px)',
+          transition:'opacity .7s, transform .7s cubic-bezier(.16,1,.3,1)',
+        }}>
+          <div>
+            <p style={{ fontSize:'10px', letterSpacing:'.24em', color:C.gold, textTransform:'uppercase', marginBottom:18, fontWeight:400 }}>Filosofia</p>
+            <h2 style={{ fontFamily:SERIF, fontSize:'clamp(24px,3.6vw,44px)', fontWeight:400, lineHeight:1.18, letterSpacing:'-.02em' }}>
+              O foco nunca foi assistir aulas.<br />
+              <em style={{ color:C.gold, fontStyle:'italic' }}>É criar resultado.</em>
+            </h2>
+          </div>
+          <p style={{ fontSize:'14px', color:C.sec, lineHeight:1.75, fontWeight:300, maxWidth:360, marginBottom:2 }}>
+            A XIO foi construída para quem quer sair do lugar — não para quem quer mais um certificado na gaveta.
+          </p>
+        </div>
+
+        {/* ── Three pillars ── */}
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))', borderTop:`0.5px solid ${C.bd}` }}>
+          {PILLARS.map((p,i)=>(
+            <div key={i} style={{
+              position:'relative',
+              padding:'clamp(32px,4.5vw,52px) 0 clamp(44px,5.5vw,64px)',
+              paddingRight: i < 2 ? 'clamp(20px,3.5vw,52px)' : 0,
+              paddingLeft:  i > 0 ? 'clamp(20px,3.5vw,52px)' : 0,
+              borderRight:  i < 2 ? `0.5px solid ${C.bd}` : 'none',
+              opacity:vis?1:0, transform:vis?'translateY(0)':'translateY(14px)',
+              transition:`opacity .65s ${.12+i*.14}s, transform .65s ${.12+i*.14}s cubic-bezier(.16,1,.3,1)`,
+            }}>
+              {/* Gold accent hairline at top */}
+              <div style={{ position:'absolute', top:-0.5, left: i===0 ? 0 : 'clamp(20px,3.5vw,52px)', width:24, height:1, background:C.gold, opacity:.8 }} />
+              <div style={{ fontSize:'10px', letterSpacing:'.22em', color:C.gold, marginBottom:20, fontWeight:400 }}>{p.num}</div>
+              <h3 style={{ fontFamily:SERIF, fontSize:'clamp(17px,1.8vw,21px)', fontWeight:400, color:C.text, marginBottom:14, letterSpacing:'-.01em' }}>{p.title}</h3>
+              <p style={{ fontSize:'13px', color:C.sec, lineHeight:1.78, fontWeight:300 }}>{p.desc}</p>
+            </div>
+          ))}
+        </div>
+
+      </div>
+    </div>
+  );
+};
+
+// ── Atoms ─────────────────────────────────────────────────────────────────────
+const Logo = ({ onClick }) => (
+  <span onClick={onClick} style={{ fontSize:'13px', letterSpacing:'.22em', fontWeight:400, cursor:onClick?'pointer':'default', userSelect:'none', whiteSpace:'nowrap' }}>
+    X I<span style={{ color:C.gold }}>○</span> ACADEMY
+  </span>
+);
+
+const Div = ({ style }) => <div style={{ height:'.5px', background:C.bd, width:'100%', ...style }} />;
+
+const GoldBtn = ({ children, onClick, loading, disabled, style }) => (
+  <button onClick={onClick} disabled={disabled||loading} className="btn-gold-glow"
+    style={{ display:'inline-flex', alignItems:'center', justifyContent:'center', gap:8, padding:'12px 28px', background:C.gold, color:'#0A0A0A', fontSize:'13px', fontWeight:500, letterSpacing:'.06em', borderRadius:4, cursor:disabled||loading?'not-allowed':'pointer', opacity:disabled||loading?.68:1, ...style }}
+  >
+    {loading && <span className="spinner" style={{ color:'#0A0A0A' }} />}
+    {children}
+  </button>
+);
+
+const GhostBtn = ({ children, onClick, style }) => (
+  <button onClick={onClick} className="btn-ghost-glow"
+    style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'11px 24px', background:'transparent', color:C.text, fontSize:'13px', fontWeight:300, letterSpacing:'.04em', border:`0.5px solid ${C.bd}`, borderRadius:4, cursor:'pointer', ...style }}
+    onMouseEnter={e=>{ e.currentTarget.style.borderColor=C.goldBd; e.currentTarget.style.background=C.hover; }}
+    onMouseLeave={e=>{ e.currentTarget.style.borderColor=C.bd; e.currentTarget.style.background='transparent'; }}
+  >{children}</button>
+);
+
+const Field = ({ label, type='text', value, onChange, placeholder, autoComplete }) => {
+  const [f,setF] = useState(false);
+  return (
+    <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+      {label && <label style={{ fontSize:'11px', letterSpacing:'.1em', color:C.ter, fontWeight:400, textTransform:'uppercase' }}>{label}</label>}
+      <input type={type} value={value} onChange={onChange} placeholder={placeholder} autoComplete={autoComplete}
+        onFocus={()=>setF(true)} onBlur={()=>setF(false)}
+        style={{ width:'100%', padding:'13px 16px', background:'rgba(255,255,255,.02)', border:`0.5px solid ${f?C.goldBd:C.bd}`, borderRadius:4, color:C.text, fontSize:'14px', fontWeight:300, outline:'none', transition:'border-color .15s', appearance:'none' }}
+      />
+    </div>
+  );
+};
+
+const ErrMsg = ({ msg }) => !msg ? null : (
+  <div style={{ padding:'11px 16px', background:'rgba(224,85,85,.07)', border:`0.5px solid rgba(224,85,85,.22)`, borderRadius:4, color:C.err, fontSize:'13px' }}>{msg}</div>
+);
+const OkMsg = ({ msg }) => !msg ? null : (
+  <div style={{ padding:'11px 16px', background:'rgba(79,175,133,.07)', border:`0.5px solid rgba(79,175,133,.22)`, borderRadius:4, color:C.ok, fontSize:'13px' }}>{msg}</div>
+);
+
+// ── Navbar ────────────────────────────────────────────────────────────────────
+const Navbar = ({ page, setPage }) => {
+  const [scrolled, setScrolled] = useState(false);
+  const [mOpen, setMOpen]       = useState(false);
+  const [dropdown, setDropdown] = useState(false);
+  const dropRef = useRef(null);
+  const isLanding = page === 'landing';
+
+  useEffect(() => {
+    if (!isLanding) { setScrolled(true); return; }
+    const fn = () => setScrolled(window.scrollY > 20);
+    fn();
+    window.addEventListener('scroll', fn);
+    return () => window.removeEventListener('scroll', fn);
+  }, [isLanding]);
+
+  useEffect(() => {
+    const fn = e => { if (dropRef.current && !dropRef.current.contains(e.target)) setDropdown(false); };
+    document.addEventListener('mousedown', fn);
+    return () => document.removeEventListener('mousedown', fn);
+  }, []);
+
+  const nav = p => { setPage(p); setDropdown(false); setMOpen(false); };
+  const showBg = !isLanding || scrolled;
+
+  const sobrePages = ['sobre','gratuitos','faq'];
+  const isActive = p => page === p;
+  const isSobreActive = sobrePages.includes(page);
+
+  const linkStyle = (active) => ({
+    background:'none', border:'none', fontSize:'13px', letterSpacing:'.04em',
+    cursor:'pointer', transition:'color .15s', fontFamily:'inherit',
+    color: active ? C.text : C.sec,
+    fontWeight: active ? 400 : 300,
+  });
+
+  return (
+    <nav style={{ position:'fixed', top:0, left:0, right:0, zIndex:200, background:showBg?'rgba(10,10,10,.95)':'transparent', backdropFilter:showBg?'blur(16px)':'none', borderBottom:showBg?`0.5px solid ${C.bd}`:'none', transition:'background .3s, border-color .3s' }}>
+      <div style={{ maxWidth:1160, margin:'0 auto', padding:'0 28px', height:64, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+        <Logo onClick={()=>nav('landing')} />
+
+        {/* Desktop */}
+        <div className="hide-m" style={{ display:'flex', alignItems:'center', gap:28 }}>
+
+          {/* Dropdown: Sobre XIO */}
+          <div ref={dropRef} style={{ position:'relative' }}>
+            <button onClick={()=>setDropdown(v=>!v)}
+              style={{ ...linkStyle(isSobreActive), display:'flex', alignItems:'center', gap:5, padding:'4px 0' }}
+              onMouseEnter={e=>e.currentTarget.style.color=C.text}
+              onMouseLeave={e=>{ if(!isSobreActive) e.currentTarget.style.color=C.sec; }}
+            >
+              Sobre XIO
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style={{ transition:'transform .2s', transform:dropdown?'rotate(180deg)':'none' }}>
+                <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            {dropdown && (
+              <div className="fade-in" style={{ position:'absolute', top:'calc(100% + 12px)', left:'50%', transform:'translateX(-50%)', width:220, background:'#0E0E0E', border:`0.5px solid ${C.bd}`, borderRadius:4, overflow:'hidden', zIndex:300 }}>
+                {[
+                  { label:'Conheça a XIO Academy', p:'sobre' },
+                  { label:'Conteúdos gratuitos', p:'gratuitos' },
+                  { label:'FAQ', p:'faq' },
+                ].map(item => (
+                  <button key={item.p} onClick={()=>nav(item.p)}
+                    style={{ width:'100%', padding:'13px 18px', textAlign:'left', fontSize:'13px', color:isActive(item.p)?C.gold:C.sec, fontWeight:isActive(item.p)?400:300, cursor:'pointer', transition:'background .15s, color .15s', display:'block', fontFamily:'inherit', background:'transparent', border:'none', borderBottom:`0.5px solid ${C.bd}` }}
+                    onMouseEnter={e=>{ e.currentTarget.style.background=C.hover; e.currentTarget.style.color=C.text; }}
+                    onMouseLeave={e=>{ e.currentTarget.style.background='transparent'; e.currentTarget.style.color=isActive(item.p)?C.gold:C.sec; }}
+                  >{item.label}</button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {[{ label:'Método', p:'metodo' }].map(l=>(
+            <button key={l.p} onClick={()=>nav(l.p)}
+              style={linkStyle(isActive(l.p))}
+              onMouseEnter={e=>e.currentTarget.style.color=C.text}
+              onMouseLeave={e=>{ if(!isActive(l.p)) e.currentTarget.style.color=C.sec; }}
+            >{l.label}</button>
+          ))}
+
+          <a href="https://dashboard.kiwify.com.br/login" target="_blank" rel="noopener noreferrer"
+            style={{ fontSize:'12px', color:'rgba(255,255,255,.4)', textDecoration:'none', letterSpacing:'.04em', transition:'color .15s' }}
+            onMouseEnter={e=>e.currentTarget.style.color=C.sec}
+            onMouseLeave={e=>e.currentTarget.style.color='rgba(255,255,255,.4)'}
+          >Já sou aluno →</a>
+
+          <GoldBtn onClick={()=>nav('planos')} style={{ padding:'9px 20px', fontSize:'12px' }}>Ver planos</GoldBtn>
+        </div>
+
+        {/* Mobile toggle */}
+        <button className="hide-d" onClick={()=>setMOpen(v=>!v)}
+          style={{ color:C.text, fontSize:'22px', lineHeight:1, background:'none', border:'none' }}>
+          {mOpen?'✕':'☰'}
+        </button>
+      </div>
+
+      {/* Mobile drawer */}
+      {mOpen && (
+        <div style={{ background:'#0D0D0D', borderTop:`0.5px solid ${C.bd}`, padding:'20px 28px', display:'flex', flexDirection:'column', gap:4 }}>
+          {[
+            { label:'Conheça a XIO Academy', p:'sobre' },
+            { label:'Conteúdos gratuitos', p:'gratuitos' },
+            { label:'FAQ', p:'faq' },
+            { label:'Método', p:'metodo' },
+            { label:'Já sou aluno →', p:'_kiwify', href:'https://dashboard.kiwify.com.br/login' },
+          ].map(l=>(
+            l.href
+              ? <a key={l.p} href={l.href} target="_blank" rel="noopener noreferrer" onClick={()=>setMOpen(false)}
+                  style={{ display:'block', color:'rgba(255,255,255,.4)', fontSize:'14px', textDecoration:'none', padding:'10px 0', borderBottom:`0.5px solid ${C.bd}` }}>
+                  {l.label}
+                </a>
+              : <button key={l.p} onClick={()=>nav(l.p)}
+                  style={{ background:'none', border:'none', color:isActive(l.p)?C.gold:C.sec, fontSize:'14px', cursor:'pointer', textAlign:'left', padding:'10px 0', fontFamily:'inherit', borderBottom:`0.5px solid ${C.bd}` }}>
+                  {l.label}
+                </button>
+          ))}
+          <div style={{ paddingTop:16 }}>
+            <GoldBtn onClick={()=>nav('planos')} style={{ padding:'11px 24px', fontSize:'13px' }}>Ver planos</GoldBtn>
+          </div>
+        </div>
+      )}
+    </nav>
+  );
+};
+
+// ── Footer ────────────────────────────────────────────────────────────────────
+const Footer = ({ setPage }) => (
+  <footer style={{ borderTop:`0.5px solid ${C.bd}`, padding:'40px 28px', marginTop:'auto' }}>
+    <div style={{ maxWidth:1160, margin:'0 auto' }}>
+      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', flexWrap:'wrap', gap:16, marginBottom:24 }}>
+        <Logo onClick={()=>setPage('landing')} />
+        <div style={{ display:'flex', gap:24 }}>
+          {['Instagram','LinkedIn','YouTube'].map(s=>(
+            <span key={s} style={{ fontSize:'12px', color:C.ter, cursor:'pointer', transition:'color .15s' }}
+              onMouseEnter={e=>e.currentTarget.style.color=C.sec}
+              onMouseLeave={e=>e.currentTarget.style.color=C.ter}>{s}</span>
+          ))}
+        </div>
+      </div>
+      <div style={{ borderTop:`0.5px solid ${C.bd}`, paddingTop:20, display:'flex', alignItems:'center', justifyContent:'space-between', flexWrap:'wrap', gap:12 }}>
+        <p style={{ fontSize:'12px', color:C.ter }}>© 2026 XIO Academy. Todos os direitos reservados.</p>
+        <div style={{ display:'flex', gap:20, flexWrap:'wrap' }}>
+          <a href="https://dashboard.kiwify.com.br/login" target="_blank" rel="noopener noreferrer"
+            style={{ fontSize:'12px', color:C.ter, textDecoration:'none', transition:'color .15s' }}
+            onMouseEnter={e=>e.currentTarget.style.color=C.sec}
+            onMouseLeave={e=>e.currentTarget.style.color=C.ter}>Área do aluno</a>
+          <span style={{ fontSize:'12px', color:C.ter, cursor:'pointer', transition:'color .15s' }}
+            onMouseEnter={e=>e.currentTarget.style.color=C.sec}
+            onMouseLeave={e=>e.currentTarget.style.color=C.ter}>Política de privacidade</span>
+          <span style={{ fontSize:'12px', color:C.ter, cursor:'pointer', transition:'color .15s' }}
+            onMouseEnter={e=>e.currentTarget.style.color=C.sec}
+            onMouseLeave={e=>e.currentTarget.style.color=C.ter}>Termos de uso</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+);
+
+// ── Inner page header ─────────────────────────────────────────────────────────
+const PageHero = ({ label, title, subtitle, children }) => (
+  <section style={{ padding:'clamp(108px,14vw,152px) 28px clamp(56px,8vw,88px)', maxWidth:1160, margin:'0 auto' }} className="fade-up">
+    {label && <p style={{ fontSize:'11px', letterSpacing:'.18em', color:C.gold, fontWeight:400, marginBottom:20, textTransform:'uppercase' }}>{label}</p>}
+    <h1 style={{ fontSize:'clamp(34px,6vw,64px)', fontWeight:300, lineHeight:1.08, letterSpacing:'-.025em', marginBottom:subtitle?20:0 }}>{title}</h1>
+    {subtitle && <p style={{ fontSize:'clamp(15px,2vw,18px)', color:C.sec, lineHeight:1.7, maxWidth:580, fontWeight:300, marginTop:16 }}>{subtitle}</p>}
+    {children}
+  </section>
+);
+
+// ── Hero Carousel ─────────────────────────────────────────────────────────────
+const HeroCarousel = ({ setPage }) => {
+  const [idx, setIdx] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const N = 3;
+
+  useEffect(() => {
+    if (paused) return;
+    const t = setInterval(() => setIdx(i=>(i+1)%N), 5000);
+    return () => clearInterval(t);
+  }, [paused]);
+
+  const prev = () => { setPaused(true); setIdx(i=>(i-1+N)%N); };
+  const next = () => { setPaused(true); setIdx(i=>(i+1)%N); };
+
+  const slides = [
+    <div key={0} style={{ maxWidth:820, width:'100%', position:'relative', zIndex:2 }} className={idx===0?'fade-up':''}>
+      <div style={{ display:'inline-block', padding:'5px 14px', border:'0.5px solid rgba(255,255,255,.15)', borderRadius:2, marginBottom:40 }}>
+        <span style={{ fontSize:'10px', letterSpacing:'.2em', color:C.gold, fontWeight:400, textTransform:'uppercase' }}>TURMA LIMITADA — 2026</span>
+      </div>
+      <h1 style={{ fontSize:'clamp(36px,5vw,60px)', fontWeight:300, lineHeight:1.07, letterSpacing:'-.025em', marginBottom:20 }}>
+        Você não aprende mais.<br />Você <em style={{ color:C.gold, fontStyle:'italic' }}>transforma</em>.
+      </h1>
+      <p style={{ fontSize:'clamp(15px,2vw,18px)', color:C.sec, lineHeight:1.72, maxWidth:480, marginBottom:36, fontWeight:300 }}>
+        O método XIO condensa o que leva anos de tentativa e erro em uma progressão direta — da base até resultados reais.
+      </p>
+      <div style={{ display:'flex', gap:12, flexWrap:'wrap' }}>
+        <GoldBtn onClick={()=>setPage('planos')} style={{ padding:'13px 34px', fontSize:'13px', letterSpacing:'.08em' }}>Ver planos</GoldBtn>
+        <GhostBtn onClick={()=>setPage('metodo')}>Conhecer o método →</GhostBtn>
+      </div>
+    </div>,
+
+    <div key={1} style={{ maxWidth:820, width:'100%' }} className={idx===1?'fade-up':''}>
+      <div style={{ display:'inline-flex', alignItems:'center', gap:10, padding:'5px 14px', border:`0.5px solid ${C.goldBd}`, borderRadius:2, marginBottom:52 }}>
+        <span style={{ width:5, height:5, borderRadius:'50%', background:C.gold }} />
+        <span style={{ fontSize:'11px', letterSpacing:'.16em', color:C.gold, fontWeight:400 }}>O MÉTODO</span>
+      </div>
+      <h1 style={{ fontSize:'clamp(38px,7.5vw,78px)', fontWeight:300, lineHeight:1.07, letterSpacing:'-.025em', marginBottom:28 }}>
+        Três módulos.<br /><em style={{ color:C.gold, fontStyle:'italic' }}>Uma jornada</em> completa.
+      </h1>
+      <p style={{ fontSize:'clamp(15px,2vw,18px)', color:C.sec, lineHeight:1.72, maxWidth:520, marginBottom:44, fontWeight:300 }}>
+        Da mentalidade de alta performance à execução de projetos reais — cada etapa foi projetada para gerar resultados concretos.
+      </p>
+      <div style={{ display:'flex', gap:8, flexWrap:'wrap', marginBottom:44 }}>
+        {MODULES.map(m=>(
+          <span key={m.id} style={{ padding:'8px 16px', border:`0.5px solid ${C.bd}`, borderRadius:2, fontSize:'12px', color:C.sec, letterSpacing:'.06em' }}>
+            <span style={{ color:C.gold }}>{m.num}</span> {m.title}
+          </span>
+        ))}
+      </div>
+      <GhostBtn onClick={()=>setPage('metodo')}>Explorar os módulos →</GhostBtn>
+    </div>,
+
+    <div key={2} style={{ maxWidth:560, width:'100%', position:'relative', zIndex:2 }} className={idx===2?'fade-up':''}>
+      <div style={{ display:'inline-flex', alignItems:'center', gap:10, padding:'5px 14px', border:`0.5px solid ${C.goldBd}`, borderRadius:2, marginBottom:52 }}>
+        <span style={{ width:5, height:5, borderRadius:'50%', background:C.gold }} />
+        <span style={{ fontSize:'11px', letterSpacing:'.16em', color:C.gold, fontWeight:400 }}>QUEM ENSINA</span>
+      </div>
+      <h1 style={{ fontFamily:SERIF, fontSize:'clamp(36px,6.5vw,72px)', fontWeight:400, lineHeight:1.08, letterSpacing:'-.025em', marginBottom:28 }}>
+        Do zero ao primeiro <em style={{ color:C.gold, fontStyle:'italic' }}>cliente</em>.
+      </h1>
+      <p style={{ fontSize:'clamp(15px,1.8vw,17px)', color:'rgba(255,255,255,.65)', lineHeight:1.78, maxWidth:460, marginBottom:52, fontWeight:300 }}>
+        Aprendi programação usando IA e construí a XIO Academy para ensinar o mesmo caminho — sem teoria excessiva e sem enrolação.
+      </p>
+      <div style={{ display:'flex', gap:12, flexWrap:'wrap', marginBottom:40 }}>
+        <GoldBtn onClick={()=>setPage('planos')} style={{ padding:'13px 34px', fontSize:'13px', letterSpacing:'.08em' }}>Ver planos</GoldBtn>
+        <GhostBtn onClick={()=>setPage('metodo')}>Conhecer método →</GhostBtn>
+      </div>
+      <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+        <div style={{ width:24, height:'.5px', background:C.gold, opacity:.55 }} />
+        <span style={{ fontSize:'11px', color:'rgba(255,255,255,.28)', letterSpacing:'.08em', fontWeight:300 }}>Iuri Moreira — Fundador</span>
+      </div>
+    </div>,
+  ];
+
+  const Arrow = ({ dir }) => (
+    <button onClick={dir==='left'?prev:next}
+      style={{ position:'absolute', top:'50%', [dir==='left'?'left':'right']:'clamp(12px,3vw,36px)', transform:'translateY(-50%)', width:44, height:44, display:'flex', alignItems:'center', justifyContent:'center', background:'rgba(255,255,255,.06)', border:`0.5px solid ${C.bd}`, borderRadius:'50%', color:C.sec, fontSize:'18px', cursor:'pointer', zIndex:10, transition:'all .15s' }}
+      onMouseEnter={e=>{ e.currentTarget.style.background='rgba(255,255,255,.12)'; e.currentTarget.style.color=C.text; }}
+      onMouseLeave={e=>{ e.currentTarget.style.background='rgba(255,255,255,.06)'; e.currentTarget.style.color=C.sec; }}
+    >{dir==='left'?'←':'→'}</button>
+  );
+
+  return (
+    <div style={{ position:'relative', minHeight:'100vh', overflow:'hidden' }}
+      onMouseEnter={()=>setPaused(true)} onMouseLeave={()=>setPaused(false)}>
+      {/* Floating orbs — hidden on image slides */}
+      <div style={{ position:'absolute', inset:0, pointerEvents:'none', zIndex:0, opacity:(idx===0||idx===2)?0:1, transition:'opacity .75s ease' }}>
+        <div style={{ position:'absolute', top:'12%', right:'8%', width:420, height:420, borderRadius:'50%', background:'radial-gradient(circle, rgba(200,169,110,.07) 0%, transparent 70%)', animation:'floatOrb 9s ease-in-out infinite' }} />
+        <div style={{ position:'absolute', bottom:'18%', left:'5%', width:280, height:280, borderRadius:'50%', background:'radial-gradient(circle, rgba(200,169,110,.05) 0%, transparent 70%)', animation:'floatOrb2 12s ease-in-out infinite' }} />
+        <div style={{ position:'absolute', top:'45%', right:'22%', width:160, height:160, borderRadius:'50%', background:'radial-gradient(circle, rgba(200,169,110,.04) 0%, transparent 70%)', animation:'floatOrb 7s ease-in-out infinite 3s' }} />
+        <div style={{ position:'absolute', inset:0, background:'radial-gradient(ellipse 60% 55% at 20% 50%, rgba(200,169,110,.04) 0%, transparent 70%)' }} />
+      </div>
+      {slides.map((s,i)=>(
+        <div key={i} style={{ position:'absolute', inset:0, display:'flex', alignItems:'center', padding:'clamp(80px,10vw,120px) clamp(28px,6vw,80px) 80px', opacity:i===idx?1:0, transition:'opacity .75s ease', pointerEvents:i===idx?'auto':'none', zIndex:1 }}>
+          {/* Evento background — slide 0 only */}
+          {i===0 && <>
+            <img
+              src="1.jpg"
+              alt=""
+              aria-hidden="true"
+              style={{
+                position:'absolute', right:0, top:0,
+                height:'100%', width:'auto',
+                objectFit:'cover', objectPosition:'center 50%',
+                filter:'contrast(1.1) brightness(0.72)',
+                willChange:'transform',
+              }}
+            />
+            {/* Gradiente lateral suave — fullscreen */}
+            <div style={{ position:'absolute', inset:0, background:'linear-gradient(90deg, rgba(10,10,10,1) 0%, rgba(10,10,10,1) 25%, rgba(10,10,10,0.95) 40%, rgba(10,10,10,0.75) 50%, rgba(10,10,10,0.4) 60%, rgba(10,10,10,0.15) 75%, rgba(10,10,10,0) 90%)', pointerEvents:'none' }} />
+            {/* Gradiente borda esquerda da foto */}
+            <div style={{ position:'absolute', top:0, bottom:0, left:0, width:200, background:'linear-gradient(to right, #0A0A0A 0%, rgba(10,10,10,0.9) 30%, rgba(10,10,10,0.5) 60%, rgba(10,10,10,0) 100%)', pointerEvents:'none', zIndex:2 }} />
+            {/* Vignette */}
+            <div style={{ position:'absolute', inset:0, background:'radial-gradient(ellipse 95% 85% at 50% 40%, transparent 35%, rgba(0,0,0,0.45) 100%)', pointerEvents:'none' }} />
+            {/* Fade topo */}
+            <div style={{ position:'absolute', top:0, left:0, right:0, height:60, background:'linear-gradient(to bottom, rgba(10,10,10,0.6), transparent)', pointerEvents:'none', zIndex:1 }} />
+            {/* Fade base */}
+            <div style={{ position:'absolute', bottom:0, left:0, right:0, height:80, background:'linear-gradient(to top, rgba(10,10,10,0.8), transparent)', pointerEvents:'none', zIndex:1 }} />
+          </>}
+          {/* Founder cinematic background — slide 2 only */}
+          {i===2 && <>
+            <img
+              src="WhatsApp Image 2026-05-18 at 14.48.54.jpeg"
+              alt=""
+              aria-hidden="true"
+              style={{
+                position:'absolute', inset:0, width:'100%', height:'100%',
+                objectFit:'cover', objectPosition:'65% 12%',
+                filter:'grayscale(100%) contrast(1.16) brightness(0.72)',
+                animation:'heroZoom 12s ease-out forwards',
+                transformOrigin:'65% 12%',
+                willChange:'transform',
+              }}
+            />
+            {/* Left text-safe zone — deep fade so copy stays readable */}
+            <div style={{ position:'absolute', inset:0, background:'linear-gradient(to right, rgba(10,10,10,0.96) 0%, rgba(10,10,10,0.82) 32%, rgba(10,10,10,0.45) 55%, rgba(10,10,10,0.15) 72%, transparent 88%)', pointerEvents:'none' }} />
+            {/* Vignette */}
+            <div style={{ position:'absolute', inset:0, background:'radial-gradient(ellipse 95% 85% at 62% 30%, transparent 32%, rgba(0,0,0,0.55) 100%)', pointerEvents:'none' }} />
+            {/* Bottom cinematic bar */}
+            <div style={{ position:'absolute', bottom:0, left:0, right:0, height:'32%', background:'linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 100%)', pointerEvents:'none' }} />
+            {/* Top fade */}
+            <div style={{ position:'absolute', top:0, left:0, right:0, height:'20%', background:'linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 100%)', pointerEvents:'none' }} />
+            {/* Film grain extra layer on image */}
+            <div style={{ position:'absolute', inset:0, backgroundImage:`url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.88' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)' opacity='1'/%3E%3C/svg%3E")`, opacity:.03, mixBlendMode:'screen', pointerEvents:'none' }} />
+          </>}
+          {s}
+        </div>
+      ))}
+      <div style={{ position:'absolute', bottom:72, left:'50%', transform:'translateX(-50%)', width:'clamp(180px,36vw,300px)' }}>
+        <div style={{ height:'1px', background:C.bd, borderRadius:1, overflow:'hidden' }}>
+          <div key={`${idx}-${paused}`} className={paused?'':'prog-bar'} style={{ height:'100%', background:C.gold, transformOrigin:'left' }} />
+        </div>
+      </div>
+      <div style={{ position:'absolute', bottom:32, left:'50%', transform:'translateX(-50%)', display:'flex', gap:8, alignItems:'center' }}>
+        {Array.from({length:N}).map((_,i)=>(
+          <button key={i} onClick={()=>{ setPaused(true); setIdx(i); }}
+            style={{ width:i===idx?22:6, height:6, borderRadius:3, background:i===idx?C.gold:C.bdStr, border:'none', cursor:'pointer', transition:'all .3s', padding:0 }} />
+        ))}
+      </div>
+      <Arrow dir="left" /><Arrow dir="right" />
+    </div>
+  );
+};
+
+// ── Testimonials Carousel ─────────────────────────────────────────────────────
+const TestimonialsCarousel = ({ items }) => {
+  const list = items || TESTIMONIALS.slice(0,3);
+  const [idx, setIdx] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setIdx(i=>(i+1)%list.length), 5000);
+    return () => clearInterval(t);
+  }, [list.length]);
+  return (
+    <div style={{ position:'relative', minHeight:300 }}>
+      {list.map((t,i)=>(
+        <div key={i} style={{ position:'absolute', inset:0, opacity:i===idx?1:0, transition:'opacity .7s ease', pointerEvents:i===idx?'auto':'none', display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center' }}>
+          <div style={{ fontSize:'32px', color:C.gold, opacity:.3, marginBottom:28, lineHeight:1, fontWeight:300 }}>"</div>
+          <blockquote style={{ fontSize:'clamp(16px,2.5vw,21px)', fontWeight:300, lineHeight:1.65, letterSpacing:'-.01em', maxWidth:680, marginBottom:40 }}>{t.quote}</blockquote>
+          <Div style={{ width:36, marginBottom:20 }} />
+          <p style={{ fontSize:'13px', color:C.sec, letterSpacing:'.06em' }}>{t.name} — <span style={{ color:C.ter }}>{t.role}</span></p>
+        </div>
+      ))}
+      <div style={{ position:'absolute', bottom:-40, left:'50%', transform:'translateX(-50%)', display:'flex', gap:8 }}>
+        {list.map((_,i)=>(
+          <button key={i} onClick={()=>setIdx(i)}
+            style={{ width:i===idx?18:6, height:6, borderRadius:3, background:i===idx?C.gold:C.bdStr, border:'none', cursor:'pointer', transition:'all .3s', padding:0 }} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// ── Landing Page (simplified) ─────────────────────────────────────────────────
+const LandingPage = ({ setPage }) => (
+  <div style={{ background:C.bg }}>
+    <HeroCarousel setPage={setPage} />
+
+    <CredibilitySection />
+
+    <EmpresasSection />
+
+    <RecebeSection />
+
+    <PlanosSection />
+
+    <GuaranteeSection />
+
+    {/* Teasers */}
+    <section style={{ padding:'clamp(80px,12vw,140px) 28px' }}>
+      <div style={{ maxWidth:1160, margin:'0 auto' }}>
+        <div style={{ marginBottom:64 }}>
+          <p style={{ fontSize:'11px', letterSpacing:'.18em', color:C.gold, fontWeight:400, marginBottom:14, textTransform:'uppercase' }}>Explore</p>
+          <h2 style={{ fontSize:'clamp(26px,4.5vw,44px)', fontWeight:300, letterSpacing:'-.02em' }}>Tudo que a XIO Academy oferece</h2>
+        </div>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(240px,1fr))', gap:1, border:`0.5px solid ${C.bd}`, borderRadius:4, overflow:'hidden' }}>
+          {[
+            { label:'O Método', title:'Uma progressão em 3 etapas.', desc:'Da mentalidade à execução — cada passo foi desenhado para levar ao próximo resultado.', p:'metodo' },
+            { label:'Resultados', title:'Quem entra no método não volta ao mesmo lugar.', desc:'Profissionais que aplicaram o método XIO e transformaram a forma como constroem resultado.', p:'resultados' },
+            { label:'Sobre a XIO', title:'Uma escola construída na prática.', desc:'Conheça os fundadores e a missão por trás do método.', p:'sobre' },
+            { label:'Conteúdo gratuito', title:'Comece antes de comprar.', desc:'Materiais gratuitos para você conhecer o método antes de decidir.', p:'gratuitos' },
+          ].map((t,i)=>(
+            <div key={i}
+              style={{ padding:'clamp(28px,4vw,44px) clamp(20px,3vw,36px)', background:C.bg, borderRight:i<3?`0.5px solid ${C.bd}`:'none', display:'flex', flexDirection:'column', transition:'background .2s' }}
+              onMouseEnter={e=>e.currentTarget.style.background=C.hover}
+              onMouseLeave={e=>e.currentTarget.style.background=C.bg}
+            >
+              <p style={{ fontSize:'10px', letterSpacing:'.16em', color:C.gold, fontWeight:400, marginBottom:18, textTransform:'uppercase' }}>{t.label}</p>
+              <h3 style={{ fontSize:'17px', fontWeight:400, marginBottom:10, letterSpacing:'-.01em', lineHeight:1.3 }}>{t.title}</h3>
+              <p style={{ fontSize:'13px', color:C.sec, lineHeight:1.65, flex:1, marginBottom:28 }}>{t.desc}</p>
+              <button onClick={()=>setPage(t.p)}
+                style={{ alignSelf:'flex-start', background:'none', border:'none', color:C.gold, fontSize:'13px', cursor:'pointer', letterSpacing:'.04em', fontFamily:'inherit', display:'flex', alignItems:'center', gap:6, transition:'opacity .15s' }}
+                onMouseEnter={e=>e.currentTarget.style.opacity='.7'}
+                onMouseLeave={e=>e.currentTarget.style.opacity='1'}
+              >Ver mais →</button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    {/* CTA */}
+    <section style={{ padding:'clamp(80px,12vw,140px) 28px', borderTop:`0.5px solid ${C.bd}`, position:'relative', overflow:'hidden' }}>
+      <div style={{ position:'absolute', inset:0, background:'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(200,169,110,.05) 0%, transparent 70%)', pointerEvents:'none' }} />
+      <div style={{ position:'absolute', bottom:0, left:'50%', transform:'translateX(-50%)', width:'40%', height:1, background:`linear-gradient(90deg, transparent, ${C.goldBd}, transparent)`, pointerEvents:'none' }} />
+      <div style={{ maxWidth:580, margin:'0 auto', textAlign:'center', position:'relative', zIndex:1 }}>
+        <p style={{ fontSize:'10px', letterSpacing:'.25em', color:C.gold, fontWeight:400, marginBottom:20, textTransform:'uppercase' }}>Próxima turma</p>
+        <h2 style={{ fontSize:'clamp(26px,5vw,48px)', fontWeight:300, letterSpacing:'-.02em', lineHeight:1.12, marginBottom:20 }}>
+          Pronto para parar de aprender<br />e começar a <em style={{ color:C.gold, fontStyle:'italic' }}>transformar</em>?
+        </h2>
+        <p style={{ fontSize:'15px', color:C.sec, lineHeight:1.65, marginBottom:48, fontWeight:300 }}>
+          Vagas limitadas por turma. Garantia de 7 dias ou reembolso integral.
+        </p>
+        <GoldBtn onClick={()=>setPage('planos')} style={{ padding:'14px 44px', fontSize:'13px', letterSpacing:'.08em' }}>
+          Ver planos e começar
+        </GoldBtn>
+        <p style={{ fontSize:'12px', color:C.ter, marginTop:16 }}>Acesso imediato após confirmação do pagamento</p>
+      </div>
+    </section>
+
+    <Footer setPage={setPage} />
+  </div>
+);
+
+// ── Sobre Page ────────────────────────────────────────────────────────────────
+const FOUNDERS = [
+  { nome:'Iuri Moreira',  idade:'21 anos', cargo:'CEO & Co-fundador', cidade:'Parauapebas — PA', foto:'WhatsApp Image 2026-05-18 at 14.48.54.jpeg', iniciais:'IM', photoPos:'center center', photoFit:'cover',    photoBg:'transparent', aspectR:'4/5', bio:'Estudante de Odontologia em Parauapebas, descobriu na inteligência artificial uma forma de transformar curiosidade em impacto real. Aprendeu IA de forma autodidata e hoje aplica tecnologia no desenvolvimento de soluções e negócios locais. Acredita que a próxima geração de empreendedores do Pará surgirá da união entre inovação, ambição e acesso ao conhecimento.' },
+  { nome:'Octávio Lobo',  idade:'21 anos', cargo:'Co-fundador',        cidade:'Vancouver — CA',   foto:'WhatsApp Image 2026-05-04 at 22.45.29.jpeg', iniciais:'OL', photoPos:'center center', photoFit:'contain', photoBg:'#111111',     aspectR:'4/5', bio:'Web Designer baseado em Vancouver, Canadá. Nascido e criado em Parauapebas, acredita que talento não depende de localização, mas de visão, método e oportunidade. Usa design e tecnologia para aproximar pessoas do universo digital e mostrar que é possível construir algo grande começando de qualquer lugar.' },
+];
+
+const SobrePage = ({ setPage }) => {
+  const [imgErr, setImgErr] = useState({});
+  return (
+    <div style={{ background:C.bg }}>
+      <PageHero label="Conheça a XIO Academy" title="Uma escola construída na prática." subtitle="Não somos mais uma plataforma de cursos. Somos um método — construído por profissionais que erraram o suficiente para saber o que funciona de verdade." />
+
+      <Div />
+
+      {/* Missão */}
+      <section style={{ padding:'clamp(72px,10vw,120px) 28px' }}>
+        <div style={{ maxWidth:1160, margin:'0 auto', display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(280px,1fr))', gap:'clamp(40px,6vw,80px)' }}>
+          <div>
+            <p style={{ fontSize:'11px', letterSpacing:'.18em', color:C.gold, fontWeight:400, marginBottom:20, textTransform:'uppercase' }}>Missão</p>
+            <blockquote style={{ fontSize:'clamp(20px,3.5vw,32px)', fontWeight:300, lineHeight:1.45, letterSpacing:'-.02em', marginBottom:24 }}>
+              "Eliminar os anos de erro que a maioria das pessoas precisa passar para descobrir o que realmente funciona."
+            </blockquote>
+          </div>
+          <div style={{ display:'flex', flexDirection:'column', justifyContent:'flex-end' }}>
+            {['A XIO Academy nasceu da frustração de dois profissionais que perceberam que o mercado de educação estava cheio de conteúdo e vazio de método.', 'Levamos 3 anos desenvolvendo, testando e refinando uma progressão que realmente funciona — não em hipóteses, mas com centenas de profissionais reais.'].map((p,i)=>(
+              <p key={i} style={{ fontSize:'15px', color:i===0?C.text:C.sec, lineHeight:1.72, marginBottom:20, fontWeight:300 }}>{p}</p>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Fundadores */}
+      <section style={{ borderTop:`0.5px solid ${C.bd}`, padding:'clamp(72px,10vw,120px) 28px', background:C.bg2 }}>
+        <div style={{ maxWidth:1160, margin:'0 auto' }}>
+          <p style={{ fontSize:'11px', letterSpacing:'.18em', color:C.gold, fontWeight:400, marginBottom:56, textTransform:'uppercase' }}>Os fundadores</p>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(300px,1fr))', gap:32 }}>
+            {FOUNDERS.map((f,i)=>(
+              <div key={i}>
+                <div style={{ width:'100%', aspectRatio:f.aspectR, overflow:'hidden', borderRadius:4, border:`0.5px solid ${C.bd}`, background:'rgba(200,169,110,.06)', position:'relative' }}>
+                  {!imgErr[f.nome] ? (
+                    <img src={f.foto} alt={f.nome}
+                      onError={()=>setImgErr(p=>({...p,[f.nome]:true}))}
+                      style={{ width:'100%', height:'100%', objectFit:f.photoFit, objectPosition:f.photoPos, background:f.photoBg, display:'block', filter:'brightness(.9)' }}
+                    />
+                  ) : (
+                    <div style={{ width:'100%', height:'100%', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                      <span style={{ fontSize:'48px', color:C.gold, fontWeight:300, letterSpacing:'-.02em' }}>{f.iniciais}</span>
+                    </div>
+                  )}
+                </div>
+                <div style={{ paddingTop:24 }}>
+                  <h3 style={{ fontSize:'22px', fontWeight:400, letterSpacing:'-.01em', color:C.text, marginBottom:8 }}>{f.nome}</h3>
+                  <p style={{ fontSize:'10px', letterSpacing:'.18em', textTransform:'uppercase', color:C.gold, marginBottom:16, fontWeight:400 }}>
+                    {f.idade} — {f.cargo} — {f.cidade}
+                  </p>
+                  <p style={{ fontSize:'13px', color:'rgba(255,255,255,.5)', lineHeight:1.8, fontWeight:300 }}>{f.bio}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <CredibilitySection />
+
+      <section style={{ borderTop:`0.5px solid ${C.bd}`, padding:'clamp(72px,10vw,120px) 28px' }}>
+        <div style={{ maxWidth:560, margin:'0 auto', textAlign:'center' }}>
+          <h2 style={{ fontSize:'clamp(24px,4vw,40px)', fontWeight:300, letterSpacing:'-.02em', lineHeight:1.2, marginBottom:20 }}>Pronto para conhecer o método?</h2>
+          <p style={{ fontSize:'15px', color:C.sec, lineHeight:1.7, marginBottom:40 }}>Vagas limitadas. Garantia de 7 dias.</p>
+          <GoldBtn onClick={()=>setPage('planos')} style={{ padding:'13px 36px', fontSize:'13px', letterSpacing:'.08em' }}>Garantir minha vaga</GoldBtn>
+        </div>
+      </section>
+
+      <Footer setPage={setPage} />
+    </div>
+  );
+};
+
+// ── Método Page ───────────────────────────────────────────────────────────────
+const MetodoPage = ({ setPage }) => (
+  <div style={{ background:C.bg }}>
+    <PageHero label="O Método" title="Uma progressão em 3 etapas." subtitle="Cada módulo foi desenhado para levar você ao próximo nível — na sequência certa, sem atalhos, sem teoria vazia." />
+
+    <Div />
+
+    {/* Modules detail */}
+    <section style={{ padding:'clamp(72px,10vw,120px) 28px' }}>
+      <div style={{ maxWidth:1160, margin:'0 auto', display:'flex', flexDirection:'column', gap:1 }}>
+        {MODULES.map((mod,i)=>(
+          <div key={mod.id} style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(280px,1fr))', gap:'clamp(32px,6vw,80px)', padding:'clamp(40px,6vw,64px) 0', borderBottom:i<MODULES.length-1?`0.5px solid ${C.bd}`:'none', alignItems:'start' }}>
+            <div>
+              <span style={{ fontSize:'11px', color:C.gold, letterSpacing:'.18em', fontWeight:400 }}>{mod.num}</span>
+              <h2 style={{ fontSize:'clamp(24px,4vw,38px)', fontWeight:300, letterSpacing:'-.02em', lineHeight:1.15, marginTop:16, marginBottom:16 }}>{mod.title}</h2>
+              <p style={{ fontSize:'15px', color:C.sec, lineHeight:1.7 }}>{mod.desc}</p>
+            </div>
+            <div>
+              <p style={{ fontSize:'15px', color:C.sec, lineHeight:1.72, marginBottom:28, fontWeight:300 }}>{mod.detail}</p>
+              <p style={{ fontSize:'11px', color:C.ter, marginBottom:16, letterSpacing:'.06em', textTransform:'uppercase' }}>Materiais inclusos</p>
+              <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+                {mod.files.map(f=>(
+                  <div key={f.id} style={{ display:'flex', alignItems:'center', gap:10, padding:'10px 14px', border:`0.5px solid ${C.bd}`, borderRadius:4, fontSize:'13px', color:C.sec }}>
+                    <span style={{ color:f.type==='video'?C.gold:C.ter, fontSize:'11px' }}>{f.type==='video'?'▶':'◻'}</span>
+                    {f.name}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    {/* Why */}
+    <section style={{ borderTop:`0.5px solid ${C.bd}`, padding:'clamp(72px,10vw,120px) 28px', background:C.bg2 }}>
+      <div style={{ maxWidth:1160, margin:'0 auto' }}>
+        <div style={{ marginBottom:56 }}>
+          <p style={{ fontSize:'11px', letterSpacing:'.18em', color:C.gold, fontWeight:400, marginBottom:14, textTransform:'uppercase' }}>Diferenciais</p>
+          <h2 style={{ fontSize:'clamp(26px,4.5vw,44px)', fontWeight:300, letterSpacing:'-.02em' }}>Por que o XIO é diferente</h2>
+        </div>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(230px,1fr))', gap:1 }}>
+          {WHY.map((w,i)=>(
+            <div key={i} style={{ padding:'36px 32px', background:C.bg2, borderLeft:i>0?`0.5px solid ${C.bd}`:'none', transition:'background .2s' }}
+              onMouseEnter={e=>e.currentTarget.style.background=C.hover}
+              onMouseLeave={e=>e.currentTarget.style.background=C.bg2}
+            >
+              <div style={{ width:36, height:36, color:C.gold, marginBottom:24 }}>{w.icon}</div>
+              <h4 style={{ fontSize:'16px', fontWeight:400, marginBottom:10, letterSpacing:'-.01em' }}>{w.title}</h4>
+              <p style={{ fontSize:'13px', color:C.sec, lineHeight:1.68 }}>{w.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section style={{ borderTop:`0.5px solid ${C.bd}`, padding:'clamp(72px,10vw,120px) 28px' }}>
+      <div style={{ maxWidth:560, margin:'0 auto', textAlign:'center' }}>
+        <h2 style={{ fontSize:'clamp(24px,4vw,40px)', fontWeight:300, letterSpacing:'-.02em', lineHeight:1.2, marginBottom:20 }}>Comece sua jornada hoje.</h2>
+        <GoldBtn onClick={()=>setPage('planos')} style={{ padding:'13px 36px', fontSize:'13px', letterSpacing:'.08em' }}>Garantir minha vaga</GoldBtn>
+      </div>
+    </section>
+
+    <Footer setPage={setPage} />
+  </div>
+);
+
+// ── Resultados Page ───────────────────────────────────────────────────────────
+const ResultadosPage = ({ setPage }) => (
+  <div style={{ background:C.bg }}>
+    <PageHero label="Resultados" title="Resultados reais, com nomes reais." subtitle="Mais de 2.400 profissionais transformaram sua trajetória com o método XIO. Estes são alguns deles." />
+
+    <Div />
+
+    <CredibilitySection />
+
+    {/* Testimonials carousel */}
+    <section style={{ padding:'clamp(80px,12vw,140px) 28px' }}>
+      <div style={{ maxWidth:1160, margin:'0 auto' }}>
+        <div style={{ textAlign:'center', marginBottom:80 }}>
+          <p style={{ fontSize:'11px', letterSpacing:'.18em', color:C.gold, fontWeight:400, marginBottom:14, textTransform:'uppercase' }}>Depoimentos</p>
+          <h2 style={{ fontSize:'clamp(26px,4.5vw,44px)', fontWeight:300, letterSpacing:'-.02em' }}>O que dizem nossos alunos</h2>
+        </div>
+        <TestimonialsCarousel items={TESTIMONIALS.slice(0,3)} />
+      </div>
+    </section>
+
+    {/* More testimonials */}
+    <section style={{ borderTop:`0.5px solid ${C.bd}`, padding:'clamp(72px,10vw,120px) 28px', background:C.bg2 }}>
+      <div style={{ maxWidth:1160, margin:'0 auto' }}>
+        <p style={{ fontSize:'11px', letterSpacing:'.18em', color:C.gold, fontWeight:400, marginBottom:48, textTransform:'uppercase' }}>Mais histórias</p>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(300px,1fr))', gap:16 }}>
+          {[
+            ...TESTIMONIALS.slice(3),
+            { quote:'Em menos de 60 dias apliquei o método no meu negócio e os resultados superaram minhas expectativas. O XIO entrega o que promete.', name:'Felipe Rocha', role:'Consultor Financeiro' },
+            { quote:'Finalmente um método que respeita meu tempo. Cada módulo tem densidade e aplicação imediata. Recomendo sem hesitar.', name:'Juliana Mendes', role:'Produtora de Conteúdo' },
+          ].map((t,i)=>(
+            <div key={i} style={{ border:`0.5px solid ${C.bd}`, borderRadius:4, padding:'32px 28px', background:C.bg, transition:'border-color .2s' }}
+              onMouseEnter={e=>e.currentTarget.style.borderColor=C.goldBd}
+              onMouseLeave={e=>e.currentTarget.style.borderColor=C.bd}
+            >
+              <div style={{ fontSize:'24px', color:C.gold, opacity:.3, marginBottom:20, lineHeight:1 }}>"</div>
+              <p style={{ fontSize:'14px', color:C.sec, lineHeight:1.72, marginBottom:24 }}>{t.quote}</p>
+              <Div style={{ marginBottom:16 }} />
+              <p style={{ fontSize:'12px', color:C.sec }}>{t.name} — <span style={{ color:C.ter }}>{t.role}</span></p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section style={{ borderTop:`0.5px solid ${C.bd}`, padding:'clamp(72px,10vw,120px) 28px' }}>
+      <div style={{ maxWidth:560, margin:'0 auto', textAlign:'center' }}>
+        <h2 style={{ fontSize:'clamp(24px,4vw,40px)', fontWeight:300, letterSpacing:'-.02em', lineHeight:1.2, marginBottom:20 }}>Você pode ser o próximo.</h2>
+        <p style={{ fontSize:'15px', color:C.sec, lineHeight:1.7, marginBottom:40 }}>Vagas limitadas por turma. Garantia de 7 dias.</p>
+        <GoldBtn onClick={()=>setPage('planos')} style={{ padding:'13px 36px', fontSize:'13px', letterSpacing:'.08em' }}>Garantir minha vaga</GoldBtn>
+      </div>
+    </section>
+
+    <Footer setPage={setPage} />
+  </div>
+);
+
+// ── Gratuitos Page ────────────────────────────────────────────────────────────
+const GratuitosPage = ({ setPage }) => {
+  const [catAtiva, setCatAtiva] = useState('Todos');
+  const [email, setEmail]       = useState('');
+  const [inscrito, setInscrito] = useState(false);
+  const [emailFocus, setEmailFocus] = useState(false);
+
+  const filtrados = catAtiva === 'Todos'
+    ? CONTEUDOS
+    : CONTEUDOS.filter(c => c.categoria === catAtiva);
+
+  const grandes  = filtrados.filter(c => c.destaque);
+  const pequenos = filtrados.filter(c => !c.destaque);
+
+  const hov = (enter, el) => {
+    if (enter) {
+      el.style.transform = 'translateY(-6px)';
+      el.style.boxShadow = '0 32px 80px rgba(0,0,0,0.55), 0 0 48px rgba(200,169,110,0.07)';
+      el.style.borderColor = 'rgba(200,169,110,0.18)';
+    } else {
+      el.style.transform = 'translateY(0)';
+      el.style.boxShadow = '0 4px 24px rgba(0,0,0,0.28)';
+      el.style.borderColor = 'rgba(255,255,255,0.05)';
+    }
+  };
+
+  const CardGrande = ({ c }) => (
+    <div onClick={() => alert('Conteúdo em produção — em breve!')}
+      style={{
+        position:'relative', borderRadius:16, overflow:'hidden', cursor:'pointer',
+        aspectRatio:'16/9', background:CARD_PLACEHOLDER[c.categoria]||'#111',
+        border:'0.5px solid rgba(255,255,255,.05)',
+        boxShadow:'0 4px 24px rgba(0,0,0,.28)',
+        transition:'transform .45s cubic-bezier(.16,1,.3,1), box-shadow .45s, border-color .3s',
+        flex:'1 1 calc(50% - 10px)', minWidth:280,
+      }}
+      onMouseEnter={e=>hov(true,  e.currentTarget)}
+      onMouseLeave={e=>hov(false, e.currentTarget)}
+    >
+      <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top, rgba(5,5,5,0.97) 0%, rgba(5,5,5,0.65) 45%, rgba(5,5,5,0.1) 75%, transparent 100%)', zIndex:1 }} />
+      <div style={{ position:'absolute', bottom:0, left:0, right:0, padding:'32px 36px', zIndex:2 }}>
+        <span style={{ display:'inline-block', color:C.gold, fontSize:'9px', letterSpacing:'.2em', textTransform:'uppercase', marginBottom:14, fontWeight:400 }}>{c.categoria}</span>
+        <h3 style={{ fontFamily:SERIF, fontSize:'clamp(18px,2.2vw,24px)', fontWeight:400, color:'#f5f5f5', lineHeight:1.22, marginBottom:18, letterSpacing:'-.01em' }}>{c.titulo}</h3>
+        <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+          <div style={{ width:16, height:'.5px', background:'rgba(200,169,110,.45)' }} />
+          <p style={{ fontSize:'11px', color:'rgba(255,255,255,.32)', letterSpacing:'.05em', fontWeight:300 }}>{c.autor} · {c.data}</p>
+        </div>
+      </div>
+    </div>
+  );
+
+  const CardPequeno = ({ c }) => (
+    <div onClick={() => alert('Conteúdo em produção — em breve!')}
+      style={{
+        position:'relative', borderRadius:14, overflow:'hidden', cursor:'pointer',
+        aspectRatio:'4/3', background:CARD_PLACEHOLDER[c.categoria]||'#111',
+        border:'0.5px solid rgba(255,255,255,.05)',
+        boxShadow:'0 4px 24px rgba(0,0,0,.28)',
+        transition:'transform .45s cubic-bezier(.16,1,.3,1), box-shadow .45s, border-color .3s',
+        flex:'1 1 calc(25% - 15px)', minWidth:180,
+      }}
+      onMouseEnter={e=>hov(true,  e.currentTarget)}
+      onMouseLeave={e=>hov(false, e.currentTarget)}
+    >
+      <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top, rgba(5,5,5,0.97) 0%, rgba(5,5,5,0.6) 45%, transparent 100%)', zIndex:1 }} />
+      <div style={{ position:'absolute', bottom:0, left:0, right:0, padding:'20px 22px', zIndex:2 }}>
+        <span style={{ display:'inline-block', color:C.gold, fontSize:'8.5px', letterSpacing:'.2em', textTransform:'uppercase', marginBottom:10, fontWeight:400 }}>{c.categoria}</span>
+        <h3 style={{ fontFamily:SERIF, fontSize:'clamp(13px,1.3vw,15px)', fontWeight:400, color:'#f0f0f0', lineHeight:1.3, marginBottom:10, letterSpacing:'-.01em' }}>{c.titulo}</h3>
+        <p style={{ fontSize:'10px', color:'rgba(255,255,255,.28)', letterSpacing:'.04em', fontWeight:300 }}>{c.autor} · {c.data}</p>
+      </div>
+    </div>
+  );
+
+  return (
+    <div style={{ background:'#050505', position:'relative', minHeight:'100vh' }}>
+
+      {/* Ambient glow */}
+      <div style={{ position:'fixed', top:'15%', left:'50%', transform:'translateX(-50%)', width:900, height:600, background:'radial-gradient(ellipse, rgba(200,169,110,.035) 0%, transparent 68%)', pointerEvents:'none', zIndex:0 }} />
+
+      {/* ── Hero ── */}
+      <section style={{ position:'relative', zIndex:1, maxWidth:1100, margin:'0 auto', padding:'clamp(120px,16vw,180px) clamp(28px,6vw,80px) clamp(56px,7vw,80px)', textAlign:'center' }} className="fade-up">
+        <div style={{ display:'inline-flex', alignItems:'center', gap:8, marginBottom:28 }}>
+          <span style={{ width:4, height:4, borderRadius:'50%', background:C.gold, opacity:.7 }} />
+          <span style={{ fontSize:'10px', letterSpacing:'.28em', color:'rgba(200,169,110,.75)', textTransform:'uppercase', fontWeight:400 }}>Biblioteca XIO</span>
+          <span style={{ width:4, height:4, borderRadius:'50%', background:C.gold, opacity:.7 }} />
+        </div>
+        <h1 style={{ fontFamily:SERIF, fontSize:'clamp(40px,6.5vw,76px)', fontWeight:400, lineHeight:1.06, letterSpacing:'-.025em', marginBottom:24, color:'#f5f5f5' }}>
+          Conteúdos <em style={{ color:C.gold, fontStyle:'italic' }}>gratuitos</em>.
+        </h1>
+        <p style={{ fontSize:'clamp(15px,1.6vw,17px)', color:'rgba(255,255,255,.42)', lineHeight:1.75, maxWidth:440, fontWeight:300, margin:'0 auto' }}>
+          Comece aprendendo agora. Conteúdo selecionado e atualizado pelos fundadores.
+        </p>
+      </section>
+
+      {/* ── Tabs ── */}
+      <section style={{ position:'relative', zIndex:1, maxWidth:1100, margin:'0 auto', padding:'0 clamp(28px,6vw,80px) 56px' }}>
+        <div style={{ display:'flex', gap:0, borderBottom:'0.5px solid rgba(255,255,255,.07)', overflowX:'auto' }}>
+          {CATEGORIAS_BLOG.map(cat => (
+            <button key={cat} onClick={() => setCatAtiva(cat)}
+              style={{
+                padding:'12px 22px', background:'none', border:'none', cursor:'pointer',
+                fontFamily:'inherit', fontSize:'13px', letterSpacing:'.04em', fontWeight:300,
+                color: catAtiva===cat ? C.gold : 'rgba(255,255,255,.35)',
+                borderBottom: catAtiva===cat ? `1.5px solid ${C.gold}` : '1.5px solid transparent',
+                marginBottom:'-0.5px', transition:'color .2s, border-color .2s',
+                whiteSpace:'nowrap', flexShrink:0,
+              }}
+              onMouseEnter={e=>{ if(catAtiva!==cat) e.currentTarget.style.color='rgba(255,255,255,.65)'; }}
+              onMouseLeave={e=>{ if(catAtiva!==cat) e.currentTarget.style.color='rgba(255,255,255,.35)'; }}
+            >{cat}</button>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Grid ── */}
+      <section style={{ position:'relative', zIndex:1, maxWidth:1100, margin:'0 auto', padding:'0 clamp(28px,6vw,80px) clamp(80px,10vw,120px)' }}>
+        {filtrados.length === 0 ? (
+          <p style={{ color:'rgba(255,255,255,.22)', fontSize:'14px', fontStyle:'italic', textAlign:'center', padding:'48px 0' }}>Nenhum conteúdo nesta categoria ainda.</p>
+        ) : (
+          <>
+            {grandes.length > 0 && (
+              <div style={{ display:'flex', gap:20, flexWrap:'wrap', marginBottom:20 }}>
+                {grandes.map(c => <CardGrande key={c.id} c={c} />)}
+              </div>
+            )}
+            {pequenos.length > 0 && (
+              <div style={{ display:'flex', gap:20, flexWrap:'wrap' }}>
+                {pequenos.map(c => <CardPequeno key={c.id} c={c} />)}
+              </div>
+            )}
+          </>
+        )}
+      </section>
+
+      {/* ── Newsletter ── */}
+      <section style={{ position:'relative', zIndex:1, maxWidth:1100, margin:'0 auto', padding:'0 clamp(28px,6vw,80px) clamp(80px,10vw,120px)' }}>
+        <div style={{ textAlign:'center', padding:'clamp(52px,7vw,80px) clamp(28px,5vw,60px)', background:'rgba(255,255,255,.018)', borderRadius:20, border:'0.5px solid rgba(255,255,255,.06)', backdropFilter:'blur(12px)' }}>
+          <span style={{ display:'inline-block', fontSize:'9px', letterSpacing:'.26em', color:'rgba(200,169,110,.7)', textTransform:'uppercase', marginBottom:20, fontWeight:400 }}>Newsletter XIO</span>
+          <h3 style={{ fontFamily:SERIF, fontSize:'clamp(22px,3vw,36px)', fontWeight:400, color:'#f0f0f0', lineHeight:1.18, marginBottom:12, letterSpacing:'-.01em' }}>
+            Receba conteúdos novos<br />direto no seu email.
+          </h3>
+          <p style={{ fontSize:'14px', color:'rgba(255,255,255,.35)', lineHeight:1.7, marginBottom:40, fontWeight:300, maxWidth:360, margin:'0 auto 36px' }}>
+            Toda semana, um conteúdo exclusivo sobre IA aplicada.
+          </p>
+          {inscrito ? (
+            <p style={{ fontFamily:SERIF, fontSize:'15px', color:C.gold, fontStyle:'italic' }}>Inscrição confirmada. Obrigado!</p>
+          ) : (
+            <div style={{ display:'flex', gap:10, justifyContent:'center', flexWrap:'wrap', maxWidth:420, margin:'0 auto' }}>
+              <input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="seu@email.com"
+                onFocus={()=>setEmailFocus(true)} onBlur={()=>setEmailFocus(false)}
+                style={{ flex:'1 1 200px', padding:'13px 18px', background:'rgba(255,255,255,.04)', border:`0.5px solid ${emailFocus?'rgba(200,169,110,.5)':'rgba(255,255,255,.1)'}`, borderRadius:8, color:'#f0f0f0', fontSize:'14px', fontWeight:300, fontFamily:'inherit', outline:'none', transition:'border-color .2s' }}
+              />
+              <GoldBtn onClick={()=>{ if(email.includes('@')) setInscrito(true); }}
+                style={{ padding:'12px 26px', fontSize:'12px', letterSpacing:'.08em', borderRadius:8, flexShrink:0 }}>
+                Inscrever-se
+              </GoldBtn>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ── CTA ── */}
+      <section style={{ position:'relative', zIndex:1, padding:'clamp(64px,8vw,100px) clamp(28px,6vw,80px)', borderTop:'0.5px solid rgba(255,255,255,.05)' }}>
+        <div style={{ maxWidth:520, margin:'0 auto', textAlign:'center' }}>
+          <h2 style={{ fontFamily:SERIF, fontSize:'clamp(22px,3.5vw,38px)', fontWeight:400, lineHeight:1.18, letterSpacing:'-.02em', marginBottom:18, color:'#f0f0f0' }}>
+            Os gratuitos são o começo.<br /><em style={{ color:C.gold, fontStyle:'italic' }}>O método é a transformação.</em>
+          </h2>
+          <p style={{ fontSize:'15px', color:'rgba(255,255,255,.38)', lineHeight:1.72, marginBottom:36, fontWeight:300 }}>
+            Projetos práticos, mentoria e suporte dos fundadores.
+          </p>
+          <GoldBtn onClick={()=>setPage('planos')} style={{ padding:'13px 36px', fontSize:'13px', letterSpacing:'.08em' }}>Garantir minha vaga</GoldBtn>
+        </div>
+      </section>
+
+      <Footer setPage={setPage} />
+    </div>
+  );
+};
+
+// ── FAQ Page ──────────────────────────────────────────────────────────────────
+const FaqItem = ({ q, a }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div style={{ borderBottom:`0.5px solid ${C.bd}` }}>
+      <button onClick={()=>setOpen(v=>!v)}
+        style={{ width:'100%', padding:'22px 0', display:'flex', alignItems:'center', justifyContent:'space-between', gap:24, background:'none', border:'none', cursor:'pointer', fontFamily:'inherit', textAlign:'left' }}
+      >
+        <span style={{ fontSize:'16px', fontWeight:400, color:C.text, lineHeight:1.4 }}>{q}</span>
+        <span style={{ color:C.gold, fontSize:'22px', fontWeight:200, flexShrink:0, transition:'transform .25s', transform:open?'rotate(45deg)':'none', lineHeight:1 }}>+</span>
+      </button>
+      <div style={{ maxHeight:open?'400px':'0', overflow:'hidden', transition:'max-height .3s ease' }}>
+        <p style={{ fontSize:'15px', color:C.sec, lineHeight:1.72, paddingBottom:24, fontWeight:300 }}>{a}</p>
+      </div>
+    </div>
+  );
+};
+
+const FaqPage = ({ setPage }) => (
+  <div style={{ background:C.bg }}>
+    <PageHero label="Dúvidas frequentes" title="Respondemos antes de você perguntar." />
+
+    <Div />
+
+    <section style={{ padding:'clamp(72px,10vw,120px) 28px' }}>
+      <div style={{ maxWidth:760, margin:'0 auto' }}>
+        {FAQ_DATA.map((item,i) => <FaqItem key={i} q={item.q} a={item.a} />)}
+      </div>
+    </section>
+
+    <section style={{ borderTop:`0.5px solid ${C.bd}`, padding:'clamp(72px,10vw,120px) 28px', background:C.bg2 }}>
+      <div style={{ maxWidth:560, margin:'0 auto', textAlign:'center' }}>
+        <p style={{ fontSize:'11px', letterSpacing:'.18em', color:C.gold, fontWeight:400, marginBottom:20, textTransform:'uppercase' }}>Ainda tem dúvidas?</p>
+        <h2 style={{ fontSize:'clamp(22px,3.5vw,36px)', fontWeight:300, letterSpacing:'-.02em', lineHeight:1.2, marginBottom:20 }}>Fale diretamente com a nossa equipe.</h2>
+        <p style={{ fontSize:'15px', color:C.sec, lineHeight:1.7, marginBottom:36 }}>Respondemos em até 24 horas em dias úteis.</p>
+        <div style={{ display:'flex', gap:12, justifyContent:'center', flexWrap:'wrap' }}>
+          <GoldBtn onClick={()=>window.location.href='mailto:contato@xioacademy.com.br'} style={{ padding:'12px 28px', fontSize:'13px', letterSpacing:'.06em' }}>
+            Enviar e-mail
+          </GoldBtn>
+          <GhostBtn onClick={()=>setPage('planos')}>Ver o método →</GhostBtn>
+        </div>
+      </div>
+    </section>
+
+    <Footer setPage={setPage} />
+  </div>
+);
+
+// ── App ───────────────────────────────────────────────────────────────────────
+function App() {
+  const [page, setPage] = useState('landing');
+
+  useEffect(() => { window.scrollTo(0, 0); }, [page]);
+
+  return (
+    <div style={{ minHeight:'100vh', background:C.bg }}>
+      <Navbar page={page} setPage={setPage} />
+      <div key={page} className="page-in">
+        {page==='landing'    && <LandingPage    setPage={setPage} />}
+        {page==='sobre'      && <SobrePage      setPage={setPage} />}
+        {page==='metodo'     && <MetodoPage     setPage={setPage} />}
+        {page==='resultados' && <ResultadosPage setPage={setPage} />}
+        {page==='gratuitos'  && <GratuitosPage  setPage={setPage} />}
+        {page==='faq'        && <FaqPage        setPage={setPage} />}
+        {page==='planos'     && <PlanosPage     setPage={setPage} />}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
