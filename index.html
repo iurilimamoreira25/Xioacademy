@@ -6,6 +6,13 @@
   <title>XIO Academy</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet" />
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "wve2548o1r");
+  </script>
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -86,6 +93,59 @@
 
     @media (max-width:768px)  { .hide-m { display:none !important; } }
     @media (min-width:769px)  { .hide-d { display:none !important; } }
+
+    /* ── Mobile responsiveness ── */
+    @media (max-width:768px) {
+      /* Features grid 4→1 col */
+      [data-grid="features"] { grid-template-columns: 1fr !important; }
+      [data-grid="features"] > * { grid-column: 1 !important; border-right: none !important; border-bottom: 0.5px solid rgba(255,255,255,.08) !important; }
+
+      /* Credibility pillars 3→1 col */
+      [data-grid="pillars"] { grid-template-columns: 1fr !important; }
+      [data-grid="pillars"] > * { border-right: none !important; padding-left: 0 !important; padding-right: 0 !important; }
+      [data-grid="pillars"] > * > div[style*="position:absolute"] { left: 0 !important; }
+
+      /* Planos 2→1 col */
+      [data-grid="planos"] { grid-template-columns: 1fr !important; max-width: 100% !important; }
+
+      /* Conteúdos grandes 2→1 */
+      [data-flex="conteudos-grandes"] { flex-direction: column !important; }
+      [data-flex="conteudos-grandes"] > * { flex: 1 1 100% !important; }
+
+      /* Conteúdos pequenos 4→2 col */
+      [data-flex="conteudos-pequenos"] { flex-wrap: wrap !important; }
+      [data-flex="conteudos-pequenos"] > * { flex: 1 1 calc(50% - 10px) !important; min-width: 0 !important; }
+
+      /* Fundadores 2→1 col */
+      [data-grid="fundadores"] { grid-template-columns: 1fr !important; gap: 40px !important; }
+
+      /* Guarantee seal layout 2→1 */
+      [data-grid="guarantee"] { grid-template-columns: 1fr !important; }
+
+      /* Teasers grid → 1 col */
+      [data-grid="teasers"] { grid-template-columns: 1fr !important; }
+      [data-grid="teasers"] > * { border-right: none !important; border-bottom: 0.5px solid rgba(255,255,255,.06) !important; }
+
+      /* Hero padding reduzido */
+      [data-hero] { padding-left: 20px !important; padding-right: 20px !important; }
+
+      /* Botões CTA empilhados */
+      [data-btn-group] { flex-direction: column !important; }
+      [data-btn-group] > * { width: 100% !important; justify-content: center !important; }
+
+      /* Seções — padding lateral reduzido */
+      [data-section] { padding-left: 20px !important; padding-right: 20px !important; }
+
+      /* Logos marquee menores */
+      [data-marquee] img { height: 36px !important; padding: 0 20px !important; }
+
+      /* Newsletter row → coluna */
+      [data-newsletter-row] { flex-direction: column !important; }
+      [data-newsletter-row] > * { width: 100% !important; }
+
+      /* Artigo — padding reduzido */
+      [data-artigo] { padding-left: 20px !important; padding-right: 20px !important; }
+    }
   </style>
 </head>
 <body>
@@ -106,15 +166,18 @@ const C = {
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 const MODULES = [
-  { id:1, num:'01', title:'Fundamentos', desc:'Base essencial do método XIO para construir sua mentalidade de alto desempenho.',
-    detail:'Nesta fase você destrói as crenças que travam seu crescimento e instala uma estrutura mental que sustenta resultados duradouros. Sem atalhos, sem teorias vazias — apenas o essencial que separa quem chega de quem fica no mesmo lugar.',
-    files:[{id:'f-1-1',name:'Introdução ao Método XIO',type:'video'},{id:'f-1-2',name:'Manual de Fundamentos',type:'pdf'},{id:'f-1-3',name:'Workbook — Semana 1',type:'pdf'}] },
-  { id:2, num:'02', title:'Aplicação Prática', desc:'Projetos reais orientados com feedback direto e implementação no mundo real.',
-    detail:'Você sai do campo das ideias e entra no campo da execução. Cada entrega é um projeto real — não um exercício hipotético. O aprendizado acontece no atrito com a realidade, com orientação direta para não perder tempo errando sozinho.',
-    files:[{id:'f-2-1',name:'Case Studies Vol. I',type:'pdf'},{id:'f-2-2',name:'Workshop de Aplicação',type:'video'},{id:'f-2-3',name:'Template de Projetos',type:'pdf'},{id:'f-2-4',name:'Checklist de Execução',type:'pdf'}] },
-  { id:3, num:'03', title:'Aceleração', desc:'Resultados mensuráveis e posicionamento estratégico para escalar seu impacto.',
-    detail:'Com a base consolidada e a execução em andamento, esta fase te entrega as alavancas de crescimento. Posicionamento, escala e métricas reais — tudo para que você saia do método com um plano claro dos próximos 90 dias.',
-    files:[{id:'f-3-1',name:'Estratégias de Aceleração',type:'video'},{id:'f-3-2',name:'Guia de Posicionamento',type:'pdf'},{id:'f-3-3',name:'Plano de 90 Dias',type:'pdf'}] },
+  { id:1, num:'01', verbo:'ENTENDER', title:'Fundamentos', semana:'Semana 1–2',
+    desc:'O que é IA, como funciona e por que você não precisa de programação. Saia dessa fase com mentalidade de criador.',
+    topicos:['O que é IA e como funciona (sem tecniquês)','ChatGPT, Claude, Gemini — qual usar e quando','Prompts como um profissional','Mentalidade: de consumidor para criador'] },
+  { id:2, num:'02', verbo:'DOMINAR', title:'Ferramentas', semana:'Semana 3–4',
+    desc:'Domine as ferramentas que permitem criar sem código. Excel, sites, automações e sistemas simples.',
+    topicos:['Excel + IA: automatize sem fórmula complexa','Sites e landing pages com IA (sem código)','Automações com Make/Zapier + IA','Conteúdo profissional com IA'] },
+  { id:3, num:'03', verbo:'CRIAR', title:'Construção', semana:'Semana 5–6',
+    desc:'Construa seu primeiro sistema real. Projetos guiados passo a passo por vídeo.',
+    topicos:['Sistema de atendimento automatizado','Gerador de propostas com IA','Painel de dados inteligente','Como adaptar para qualquer nicho'] },
+  { id:4, num:'04', verbo:'ENTREGAR', title:'Resultado', semana:'Semana 7–8',
+    desc:'Empacote o que criou e transforme em serviço. Posicionamento, preço e primeiro cliente.',
+    topicos:['Como precificar serviços de IA','Onde encontrar clientes que pagam','Portfólio com IA','Do projeto ao primeiro pagamento'] },
 ];
 
 const TESTIMONIALS = [
@@ -133,50 +196,297 @@ const WHY = [
 ];
 
 const FAQ_DATA = [
-  { q:'Para quem é o método XIO?', a:'Para profissionais que já consomem conteúdo mas não conseguem transformar conhecimento em resultado. Se você sente que está aprendendo muito e evoluindo pouco, o XIO foi feito para você.' },
-  { q:'Preciso ter experiência anterior?', a:'Não. O método foi desenhado para ser acessível a quem está começando e valioso para quem já tem bagagem. A progressão é clara independente do seu ponto de partida.' },
-  { q:'Como funciona o acesso ao curso?', a:'Após a compra, você recebe um e-mail da Kiwify com seus dados de acesso à plataforma. Todo o conteúdo (ebooks e vídeos) fica disponível na área do aluno da Kiwify, com proteção contra compartilhamento.' },
-  { q:'Onde acesso meu curso depois da compra?', a:'Pelo painel da Kiwify em dashboard.kiwify.com.br. Você também recebe o link direto por e-mail logo após o pagamento.' },
-  { q:'Como funciona a mentoria 1:1 do plano Premium?', a:'Após a compra do plano Premium, nossa equipe entra em contato pelo WhatsApp em até 24h para agendar suas 3 sessões de mentoria com Iuri ou Octávio.' },
-  { q:'Posso parcelar?', a:'Sim. O pagamento é feito direto pela Kiwify, com opção de cartão (parcelado em até 12x), Pix ou boleto.' },
-  { q:'Tem garantia?', a:'Sim. 7 dias de garantia incondicional pela Kiwify. Se não gostar, devolvemos 100% do valor sem perguntas.' },
-  { q:'Quanto tempo dura o curso?', a:'O conteúdo foi estruturado para ser concluído em 8 semanas seguindo o ritmo recomendado. Como o acesso é vitalício, você pode avançar no seu tempo.' },
+  { q:'Eu nunca estudei programação ou tecnologia. Consigo acompanhar?', a:'Sim. A XIO não pressupõe experiência anterior. Começamos do ponto zero e avançamos com ritmo — sem saltar etapas, sem jargão desnecessário. Se você sabe usar um celular, já tem o suficiente para começar.' },
+  { q:'Preciso morar em Parauapebas para participar?', a:'Não. O acesso é 100% digital. Você pode estar em Parauapebas, em Belém, em São Paulo ou no Canadá. A XIO foi fundada no Pará, mas o conteúdo é feito para qualquer lugar.' },
+  { q:'Quando a XIO Academy abre oficialmente?', a:'O lançamento oficial acontece em 19 de maio de 2026, às 21:15 (horário de Brasília). Quem estiver na lista de espera recebe acesso antes.' },
+  { q:'Qual a diferença real entre Essencial e Premium?', a:'O plano Essencial entrega os fundamentos: cinco ebooks e suporte via grupo. É o suficiente para quem quer começar com clareza. O Premium vai além — inclui videoaulas, ebooks extras, 3 sessões de mentoria 1:1 com os fundadores, acesso à comunidade e suporte prioritário. Escolha pelo quanto você quer aprofundar.' },
+  { q:'E se eu pagar e não gostar?', a:'Você tem sete dias para pedir reembolso integral. Sem formulário, sem ligação, sem justificativa. Manda uma mensagem e devolvemos cada centavo.' },
+  { q:'Quem está por trás da XIO?', a:'Iuri Moreira, estudante de Odontologia em Parauapebas que estuda IA por conta própria há três anos, e Octávio Lobo, web designer no Canadá que cresceu no Pará. Dois fundadores reais, com nome e rosto — não uma empresa anônima.' },
 ];
 
 const PLANOS = [
   {
     id:'essencial', nome:'Essencial',
-    preco:'R$ 149,90', precoAntigo:'R$ 199,90', parcelado:'ou 3x de R$ 49,97',
-    destaque:false, descricao:'Para quem quer começar do zero, no seu ritmo.',
-    kiwifyUrl:'https://pay.kiwify.com.br/SEU_LINK_ESSENCIAL',
-    features:['Acesso a todos os ebooks da XIO','Material vivo com atualizações','Acesso vitalício','Comunidade XIO'],
-    naoIncluso:['Aulas em vídeo','Mentoria 1:1'],
+    preco:'R$ 149,90', precoAntigo:'R$ 249,90', parcelado:'ou 3x de R$ 49,97',
+    destaque:false, descricao:'Para quem quer começar com clareza.',
+    kiwifyUrl:'https://pay.kiwify.com.br/O6OcnXQ',
+    features:['5 ebooks das 4 fases do método','Ebook bônus: Excel + IA na prática','Suporte via grupo','Acesso vitalício ao material','Atualizações futuras inclusas'],
+    naoIncluso:['Videoaulas','Mentoria 1:1','Comunidade XIO'],
   },
   {
     id:'premium', nome:'Premium',
     preco:'R$ 399,90', precoAntigo:'R$ 599,90', parcelado:'ou 6x de R$ 66,65',
-    destaque:true, descricao:'Experiência completa com mentoria pessoal.',
+    destaque:true, descricao:'Para quem quer resultado real, com acompanhamento.',
     kiwifyUrl:'https://pay.kiwify.com.br/SEU_LINK_PREMIUM',
-    features:['Acesso a todos os ebooks da XIO','Material vivo com atualizações','Mais de 5 aulas em vídeo','Projetos práticos guiados','3 sessões de mentoria 1:1 (30min cada)','Com Iuri ou Octávio — direto, sem chatbot','Suporte prioritário e acesso vitalício'],
+    features:['Tudo do plano Essencial','Mais de 5 videoaulas (projetos guiados)','Ebooks extras (Excel, Automações, Conteúdo)','3 sessões de mentoria 1:1 (30min cada)','Com Iuri ou Octávio — agendado via WhatsApp','Acesso à comunidade XIO','Suporte prioritário via WhatsApp','Certificado de conclusão'],
     naoIncluso:[],
   },
 ];
 
 const CONTEUDOS = [
-  { id:1, destaque:true,  categoria:'IA Aplicada',  titulo:'10 prompts de IA para vender mais usando ChatGPT',                    autor:'Iuri Moreira',  data:'19/05/2026' },
-  { id:2, destaque:true,  categoria:'Carreira',      titulo:'Como aprendi a programar usando IA — sem decorar sintaxe',             autor:'Iuri Moreira',  data:'12/05/2026' },
-  { id:3, destaque:false, categoria:'Programação',   titulo:'5 ferramentas de IA que todo dev iniciante precisa conhecer',          autor:'Octávio Lobo',  data:'05/05/2026' },
-  { id:4, destaque:false, categoria:'Negócios',      titulo:'Do zero ao primeiro cliente: o passo a passo real',                    autor:'Iuri Moreira',  data:'28/04/2026' },
-  { id:5, destaque:false, categoria:'IA Aplicada',   titulo:'Agentes de IA: o que são e como usar no seu negócio',                  autor:'Iuri Moreira',  data:'20/04/2026' },
-  { id:6, destaque:false, categoria:'Carreira',      titulo:'Por que Parauapebas é o lugar ideal para começar com IA',              autor:'Octávio Lobo',  data:'12/04/2026' },
+  { id:1, destaque:true,  categoria:'IA Aplicada',           titulo:'10 prompts de IA para vender mais usando ChatGPT',                          autor:'Iuri Moreira',         data:'19/05/2026', imagem:'card-prompts-ia.jpg' },
+  { id:2, destaque:true,  categoria:'Carreira',              titulo:'10 dicas para conciliar trabalho e estudo em uma rotina sustentável',        autor:'Iuri Moreira',         data:'12/05/2026', imagem:'card-trabalho-estudo.jpg' },
+  { id:3, destaque:false, categoria:'Tecnologia',            titulo:'5 tendências tecnológicas para ficar de olho em 2026',                       autor:'Redação XIO Academy',  data:'15/12/2025', imagem:'card-tendencias-tech.jpg' },
+  { id:4, destaque:false, categoria:'Transformação Digital', titulo:'Educação 5.0: como a tecnologia impacta o novo modelo de aprendizado',       autor:'Redação XIO Academy',  data:'16/05/2025', imagem:'card-educacao-5.jpg' },
+  { id:5, destaque:false, categoria:'Carreira',              titulo:'Diploma ou skills: o que o mercado de tecnologia valoriza em 2025?',          autor:'Redação XIO Academy',  data:'05/05/2025', imagem:'card-diploma-skills.jpg' },
+  { id:6, destaque:false, categoria:'Inteligência Artificial',titulo:'Agentes de IA: o futuro da inteligência artificial autônoma',               autor:'Redação XIO Academy',  data:'25/04/2025', imagem:'card-agentes-ia.jpg', statusArtigo:'em-breve' },
 ];
-const CATEGORIAS_BLOG = ['Todos','IA Aplicada','Carreira','Programação','Negócios'];
+const CATEGORIAS_BLOG = ['Todos','IA Aplicada','Carreira','Tecnologia','Transformação Digital','Inteligência Artificial'];
 // TODO: substituir gradiente placeholder por imagem real quando as fotos dos artigos forem criadas.
 const CARD_PLACEHOLDER = {
-  'IA Aplicada': 'linear-gradient(135deg,#0b1a10 0%,#0a0a0a 100%)',
-  'Carreira':    'linear-gradient(135deg,#1a1408 0%,#0a0a0a 100%)',
-  'Programação': 'linear-gradient(135deg,#0c0c1a 0%,#0a0a0a 100%)',
-  'Negócios':    'linear-gradient(135deg,#1a0c0e 0%,#0a0a0a 100%)',
+  'IA Aplicada':            'linear-gradient(135deg,#0b1a10 0%,#0a0a0a 100%)',
+  'Carreira':               'linear-gradient(135deg,#1a1408 0%,#0a0a0a 100%)',
+  'Programação':            'linear-gradient(135deg,#0c0c1a 0%,#0a0a0a 100%)',
+  'Negócios':               'linear-gradient(135deg,#1a0c0e 0%,#0a0a0a 100%)',
+  'Tecnologia':             'linear-gradient(135deg,#1a1410 0%,#0a0a0a 100%)',
+  'Transformação Digital':  'linear-gradient(135deg,#14181a 0%,#0a0a0a 100%)',
+  'Inteligência Artificial':'linear-gradient(135deg,#181420 0%,#0a0a0a 100%)',
+};
+// TODO: substituir gradiente placeholder por imagem real quando o artigo for redigido. Salvar imagens em /public/conteudos/
+const CARD_GRAD = {
+  3: 'linear-gradient(135deg,#1a1410,#0a0a0a)',
+  4: 'linear-gradient(135deg,#14181a,#0a0a0a)',
+  5: 'linear-gradient(135deg,#1a1814,#0a0a0a)',
+  6: 'linear-gradient(135deg,#181420,#0a0a0a)',
+};
+
+// ── Artigos ──────────────────────────────────────────────────────────────────
+// TODO: ao migrar para Next.js, adicionar meta tags dinâmicas por artigo,
+// OpenGraph para compartilhamento em redes sociais e schema.org para SEO.
+const ARTIGOS = {
+  1: {
+    categoria:'IA Aplicada', autor:'Iuri Moreira', data:'19/05/2026', tempoLeitura:'8 min',
+    titulo:'10 prompts de IA para estudar melhor e aumentar a produtividade',
+    blocos:[
+      { tipo:'paragrafo', texto:'A Inteligência Artificial deixou de ser novidade no universo dos estudos. Hoje, ela está presente na rotina de quem faz faculdade, pós-graduação, estuda para concursos ou busca certificações profissionais.' },
+      { tipo:'paragrafo', texto:'Ainda assim, a maioria das pessoas usa a IA de forma limitada, como se fosse apenas um "tira-dúvidas rápido". O problema é que perguntar errado gera respostas fracas. E, quando o assunto é aprendizado, isso significa perda de tempo, confusão conceitual e falsa sensação de domínio do conteúdo.' },
+      { tipo:'paragrafo', texto:'Neste artigo, você vai descobrir 10 prompts de IA que realmente ajudam a estudar melhor, aprender com profundidade e aumentar a produtividade, usando a tecnologia como aliada.' },
+      { tipo:'h2', texto:'Como usar a IA para estudar melhor' },
+      { tipo:'paragrafo', texto:'Quando bem direcionada, a Inteligência Artificial pode atuar como:' },
+      { tipo:'lista', items:['Planejadora de estudos','Explicadora de conteúdos difíceis','Organizadora de informações','Apoio em revisões e provas','Aliada da produtividade'] },
+      { tipo:'paragrafo', texto:'A seguir, veja 10 prompts de IA que fazem diferença real na forma de estudar.' },
+      { tipo:'h3', texto:'1. Crie um plano de estudos realista e flexível' },
+      { tipo:'prompt', texto:'Atue como um especialista em aprendizagem e produtividade. Crie um plano de estudos para [objetivo], considerando que tenho [X] horas por semana, dificuldade em [tema], facilidade em [tema] e um prazo de [tempo]. Inclua metas semanais, revisões espaçadas e sugestões de ajustes caso eu atrase.' },
+      { tipo:'paragrafo', texto:'Esse tipo de prompt evita cronogramas irreais e considera a vida real — trabalho, imprevistos e cansaço.' },
+      { tipo:'h3', texto:'2. Entenda conteúdos difíceis no nível certo' },
+      { tipo:'prompt', texto:'Explique [tema] em três níveis:\n• Explicação simples e intuitiva\n• Explicação intermediária com exemplos\n• Explicação técnica, como cobrada em provas ou aplicada na prática profissional.' },
+      { tipo:'paragrafo', texto:'A progressão por níveis fortalece a base e evita aquele aprendizado frágil que "some" depois da prova.' },
+      { tipo:'h3', texto:'3. Transforme textos longos em material de estudo' },
+      { tipo:'prompt', texto:'Analise este texto como um professor. Extraia conceitos-chave, definições importantes, exemplos, possíveis pegadinhas e gere um resumo estruturado para estudo.' },
+      { tipo:'paragrafo', texto:'Mais do que resumir, a IA ajuda a identificar o que realmente importa.' },
+      { tipo:'h3', texto:'4. Crie mapas mentais estratégicos' },
+      { tipo:'prompt', texto:'Organize o conteúdo abaixo em formato de mapa mental, priorizando relações de causa e efeito, hierarquia de conceitos e conexões entre os tópicos.' },
+      { tipo:'paragrafo', texto:'Esse formato facilita a memorização e melhora a aplicação prática do conhecimento.' },
+      { tipo:'h3', texto:'5. Aplique a teoria em situações reais' },
+      { tipo:'prompt', texto:'Crie exemplos práticos e situações reais em que o conceito de [tema] é aplicado, incluindo um exemplo correto e um erro comum.' },
+      { tipo:'paragrafo', texto:'Aprender com erros frequentes acelera a fixação e reduz confusões clássicas.' },
+      { tipo:'h3', texto:'6. Transforme conteúdos de estudo em áudio' },
+      { tipo:'prompt', texto:'Transforme o conteúdo abaixo em um roteiro de podcast educativo, com linguagem clara e didática. Organize em blocos curtos, traga exemplos práticos e conexões entre os conceitos.' },
+      { tipo:'paragrafo', texto:'Ideal para estudar enquanto se desloca, caminha ou faz tarefas do dia a dia.' },
+      { tipo:'h3', texto:'7. Faça revisões eficientes antes de provas' },
+      { tipo:'prompt', texto:'Crie um guia de revisão de [tema], separando o que é essencial, o que é complementar e o que costuma gerar mais erros.' },
+      { tipo:'paragrafo', texto:'Quando o tempo é curto, priorizar é tudo.' },
+      { tipo:'h3', texto:'8. Diferencie conceitos parecidos com profundidade' },
+      { tipo:'prompt', texto:'Compare [conceito A] e [conceito B], destacando diferenças conceituais, aplicações práticas, exemplos e erros comuns em provas.' },
+      { tipo:'paragrafo', texto:'Esse comando elimina confusões que costumam custar pontos importantes.' },
+      { tipo:'h3', texto:'9. Estude melhor, mesmo com pouco tempo' },
+      { tipo:'prompt', texto:'Considere que tenho apenas [X] minutos por dia para estudar [tema]. Crie uma estratégia focada em máximo aproveitamento.' },
+      { tipo:'paragrafo', texto:'Aqui, o foco é eficiência — não quantidade de horas.' },
+      { tipo:'h3', texto:'10. Consolide o aprendizado explicando com clareza' },
+      { tipo:'prompt', texto:'Me ajude a explicar [tema] como se eu estivesse ensinando alguém iniciante. Depois, avalie se minha explicação está correta e sugira melhorias.' },
+      { tipo:'paragrafo', texto:'Ensinar é uma das formas mais eficazes de aprender.' },
+      { tipo:'h2', texto:'IA não substitui o estudo, mas potencializa quem sabe usar' },
+      { tipo:'paragrafo', texto:'A Inteligência Artificial não faz milagres, mas amplifica resultados quando usada com estratégia. Prompts bem construídos ajudam a organizar ideias, identificar lacunas e aprofundar o aprendizado.' },
+      { tipo:'paragrafo', texto:'A IA pode errar e deve ser usada com senso crítico. Ainda assim, em um cenário em que o acesso à tecnologia é cada vez mais comum, o verdadeiro diferencial está em saber perguntar melhor.' },
+      { tipo:'cta' },
+    ],
+  },
+  2: {
+    categoria:'Carreira', autor:'Iuri Moreira', data:'12/05/2026', tempoLeitura:'7 min',
+    titulo:'10 dicas para conciliar trabalho e estudo em uma rotina sustentável',
+    blocos:[
+      { tipo:'intro', texto:'Em um mercado em constante transformação, onde novas competências surgem o tempo todo e a qualificação deixou de ser algo pontual, trabalhar e estudar se tornou parte inevitável da trajetória profissional, mas nem sempre uma tarefa simples.\n\nSó que, com as mudanças nos modelos de trabalho, como a consolidação do formato híbrido e o retorno gradual ao presencial, a rotina perdeu flexibilidade. O tempo que antes parecia disponível para estudar agora é consumido por deslocamentos, agendas mais rígidas e demandas que não dão trégua.\n\nNesse contexto, conciliar trabalho e estudo deixou de depender apenas de força de vontade. Passou a exigir planejamento, método e escolhas conscientes. A seguir, reunimos dicas práticas para manter o aprendizado contínuo de forma sustentável, mesmo em meio a uma rotina intensa.' },
+      { tipo:'h3', texto:'1. Comece considerando seu nível de energia' },
+      { tipo:'paragrafo', texto:'Nem todo momento do dia é ideal para aprender algo novo. Em vez de lutar contra o cansaço, o mais eficaz é ajustar o tipo de estudo ao seu nível de energia.' },
+      { tipo:'lista', items:['Use momentos de mais disposição para conteúdos novos','Reserve horários de menor energia para revisões, leituras leves ou organização de materiais'] },
+      { tipo:'paragrafo', texto:'Essa adaptação reduz a frustração e aumenta a constância.' },
+      { tipo:'h3', texto:'2. Conecte o estudo à sua rotina de trabalho' },
+      { tipo:'paragrafo', texto:'Quando o estudo se relaciona diretamente com o trabalho, ele deixa de ser uma tarefa extra e passa a ter utilidade imediata.' },
+      { tipo:'lista', items:['Relacione conceitos estudados a situações reais do trabalho','Use desafios profissionais como exemplos práticos de aprendizagem','Reflita sobre como o conteúdo pode facilitar decisões ou processos'] },
+      { tipo:'paragrafo', texto:'Essa conexão aumenta o engajamento e a retenção do conhecimento.' },
+      { tipo:'h3', texto:'3. Priorize pequenas metas diárias' },
+      { tipo:'paragrafo', texto:'Após um dia de trabalho, sessões longas de estudo podem parecer inviáveis. Nesse contexto, metas pequenas e claras funcionam melhor do que planos ambiciosos.' },
+      { tipo:'paragrafo', texto:'Exemplos de metas realistas:' },
+      { tipo:'lista', items:['Compreender um conceito','Resolver um exercício','Resumir um tópico específico'] },
+      { tipo:'paragrafo', texto:'Pequenas entregas geram sensação de progresso e ajudam a manter a motivação.' },
+      { tipo:'h3', texto:'4. Planeje pensando nos dias mais difíceis' },
+      { tipo:'paragrafo', texto:'Um erro comum é planejar o estudo somente para dias ideais. Na prática, imprevistos acontecem. Por isso, monte sua rotina de estudos considerando dias cansativos, atrasos e mudanças de agenda. Se o plano funcionar nos dias difíceis, ele funcionará em qualquer cenário.' },
+      { tipo:'h3', texto:'5. Aproveite o trabalho como fonte de aprendizado' },
+      { tipo:'paragrafo', texto:'Grande parte da sua energia já está sendo investida no trabalho. Sempre que possível, transforme atividades profissionais em oportunidades de estudo.' },
+      { tipo:'lista', items:['Analise tarefas como estudos de caso','Reflita sobre decisões tomadas','Relacione práticas do dia a dia com conceitos teóricos'] },
+      { tipo:'paragrafo', texto:'Assim, você aprende sem adicionar mais carga à rotina.' },
+      { tipo:'h3', texto:'6. Estude com intenção clara' },
+      { tipo:'paragrafo', texto:'Antes de iniciar qualquer sessão de estudo, vale se perguntar: "O que quero aprender ou resolver neste tempo?" Ter uma intenção definida evita a sensação de estudo improdutivo e melhora o foco, mesmo em períodos curtos.' },
+      { tipo:'h3', texto:'7. Saiba a hora de parar' },
+      { tipo:'paragrafo', texto:'Estudar até a exaustão pode gerar desmotivação a longo prazo. O ideal é encerrar o estudo antes do esgotamento total, mantendo uma relação mais leve com o aprendizado. Isso facilita o retorno no dia seguinte e reduz a resistência mental.' },
+      { tipo:'h3', texto:'8. Defina poucos dias fixos de estudo' },
+      { tipo:'paragrafo', texto:'Para quem trabalha e estuda, tomar decisões diariamente pode ser cansativo. Ter dias pré-definidos para estudar reduz esse esforço mental. Mesmo que sejam poucos, a regularidade ajuda a criar consistência sem sobrecarregar.' },
+      { tipo:'h3', texto:'9. Aceite o progresso possível' },
+      { tipo:'paragrafo', texto:'Nem sempre será possível estudar da forma ideal. Aceitar o progresso possível, mesmo que imperfeito, é essencial para manter a continuidade. O mais importante é avançar, ainda que gradualmente.' },
+      { tipo:'h3', texto:'10. Estude para mudar comportamento, não apenas para adquirir informação' },
+      { tipo:'paragrafo', texto:'O erro mais comum ao estudar é confundir entender com transformar. Compreender um conceito, reconhecer uma ideia ou achar algo "interessante" não significa que houve aprendizado real.' },
+      { tipo:'paragrafo', texto:'A pergunta central não deve ser "o que eu entendi?", já que essa pergunta mede só a retenção intelectual. A pergunta correta é: "o que eu vou fazer de forma diferente a partir de amanhã por causa disso?"' },
+      { tipo:'paragrafo', texto:'Aprendizado verdadeiro sempre se manifesta em ação observável:' },
+      { tipo:'lista', items:['Uma decisão tomada de outro jeito','Um erro que deixa de ser repetido','Uma escolha mais consciente','Um comportamento ajustado no dia a dia'] },
+      { tipo:'h2', texto:'Trabalhar e estudar com equilíbrio é uma estratégia de longo prazo' },
+      { tipo:'paragrafo', texto:'Conciliar trabalho e estudo de forma sustentável é uma decisão estratégica para quem busca evolução profissional contínua. O aprendizado só gera impacto real quando está alinhado à rotina, às demandas do mercado e ao bem-estar.' },
+      { tipo:'paragrafo', texto:'Na XIO Academy, os conteúdos e o curso são desenvolvidos para a realidade de quem precisa equilibrar carreira, estudos e vida pessoal. Com formatos flexíveis, conteúdos atualizados e foco na aplicação prática, as formações apoiam o desenvolvimento profissional ao longo de toda a trajetória.' },
+      { tipo:'cta', titulo:'Pronto para evoluir sua carreira com IA?', subtitulo:'Conheça o curso da XIO Academy e aprenda no seu ritmo.', botao:'Ver planos →' },
+      { tipo:'h2', texto:'FAQ — Perguntas frequentes' },
+      { tipo:'h3', texto:'É possível trabalhar e estudar ao mesmo tempo sem esgotamento?' },
+      { tipo:'paragrafo', texto:'Sim, é possível quando o estudo é planejado de forma realista e alinhado à rotina. Ajustar o estudo ao nível de energia, definir metas viáveis e respeitar limites individuais ajuda a manter o equilíbrio no longo prazo.' },
+      { tipo:'h3', texto:'Quantas horas por dia quem trabalha deve estudar?' },
+      { tipo:'paragrafo', texto:'Não existe um número ideal de horas para todos. Para quem trabalha, sessões curtas — entre 30 minutos e 1 hora por dia — tendem a ser mais sustentáveis. A regularidade e a clareza de objetivo são mais importantes do que a quantidade de tempo.' },
+      { tipo:'h3', texto:'Como manter a constância nos estudos com rotina intensa?' },
+      { tipo:'paragrafo', texto:'A constância vem da simplificação. Definir dias fixos para estudar, estabelecer metas pequenas e planejar considerando dias difíceis ajuda a manter o hábito. Conectar o estudo à rotina de trabalho também aumenta o engajamento.' },
+      { tipo:'h3', texto:'Estudar pouco todos os dias funciona?' },
+      { tipo:'paragrafo', texto:'Sim. Estudar pouco todos os dias funciona quando há foco e intenção clara. Pequenos avanços contínuos favorecem a retenção do conhecimento e tornam o aprendizado mais sustentável para quem tem uma rotina intensa.' },
+    ],
+  },
+  3: {
+    categoria:'Tecnologia', autor:'Redação XIO Academy', data:'15/12/2025', tempoLeitura:'6 min',
+    titulo:'5 tendências tecnológicas para ficar de olho em 2026',
+    blocos:[
+      { tipo:'intro', texto:'As tendências tecnológicas de 2026 indicam que a inteligência artificial entra em uma fase mais madura, com menos testes isolados e mais aplicação prática nos negócios. O foco passa a ser eficiência, governança e resultados reais para empresas e profissionais.\n\nMas como chegamos até aqui e o que, de fato, muda a partir de agora? Ao longo deste conteúdo, você vai entender quais são as principais tendências de tecnologia para 2026 e o que isso significa, na prática, para empresas e profissionais no próximo ano.' },
+      { tipo:'h2', texto:'Por que 2026 marca uma nova fase da inteligência artificial' },
+      { tipo:'paragrafo', texto:'Em 2026, a tecnologia passa a ocupar um lugar diferente dentro das empresas. A inteligência artificial deixa de ser algo "extra" ou experimental e começa a fazer parte do dia a dia dos negócios.' },
+      { tipo:'paragrafo', texto:'Isso acontece porque a IA passa a apoiar decisões importantes, melhorar processos e impactar resultados de forma mais clara. Quando a tecnologia começa a influenciar áreas centrais da empresa, ela também exige mais cuidado: planejamento, segurança e acompanhamento deixam de ser opcionais.' },
+      { tipo:'paragrafo', texto:'Por isso, temas como governança e uso responsável da tecnologia entram de vez na conversa. Não é mais só sobre inovar, mas sobre usar bem.' },
+      { tipo:'paragrafo', texto:'No fim das contas, a IA deixa de ser novidade e passa a ser uma aliada estratégica para o crescimento das empresas.' },
+      { tipo:'h2', texto:'Principais tendências tecnológicas para 2026' },
+      { tipo:'paragrafo', texto:'A seguir, reunimos as tendências que devem ganhar mais espaço em 2026, sempre com foco no que realmente muda a prática das empresas e das carreiras.' },
+      { tipo:'h3', texto:'1. Agentes autônomos' },
+      { tipo:'paragrafo', texto:'Uma das principais tendências de tecnologia 2026 é o avanço dos agentes autônomos de IA. Diferente dos assistentes tradicionais, esses sistemas conseguem executar tarefas completas, seguindo regras e avaliando resultados ao longo do processo.' },
+      { tipo:'paragrafo', texto:'Eles podem apoiar atividades como atendimento ao cliente, análise de dados, auditoria, compliance e operações internas. Na prática, isso ajuda a reduzir tarefas repetitivas e libera tempo das equipes para decisões mais estratégicas.' },
+      { tipo:'h3', texto:'2. GraphRAG' },
+      { tipo:'paragrafo', texto:'Outra tendência importante é o uso do GraphRAG, uma forma de organizar e buscar informações que ajuda a IA a entender como os dados se conectam.' },
+      { tipo:'paragrafo', texto:'Isso é especialmente relevante para empresas que lidam com grandes volumes de informações internas. Com essa abordagem, as respostas deixam de ser apenas rápidas e passam a ser mais completas, contextualizadas e confiáveis.' },
+      { tipo:'h3', texto:'3. Modelos de IA mais simples' },
+      { tipo:'paragrafo', texto:'Em vez de modelos cada vez maiores e genéricos, 2026 deve ser marcado pelo uso de modelos de IA menores e treinados para funções específicas.' },
+      { tipo:'paragrafo', texto:'Esse tipo de solução costuma ser mais eficiente, mais fácil de controlar e menos custosa. Além disso, modelos especializados facilitam auditorias e ajudam as empresas a atender exigências regulatórias, algo cada vez mais importante em setores sensíveis.' },
+      { tipo:'h3', texto:'4. Governança de IA' },
+      { tipo:'paragrafo', texto:'Com a IA sendo usada em processos cada vez mais importantes, cresce a necessidade de governança, monitoramento e controle. As empresas passam a buscar formas de entender como os modelos tomam decisões, identificar riscos e garantir conformidade com regras internas e externas.' },
+      { tipo:'paragrafo', texto:'Em 2026, a governança de IA deixa de ser um diferencial e passa a ser parte básica da operação, principalmente em áreas como finanças, saúde e infraestrutura.' },
+      { tipo:'h3', texto:'5. As carreiras que ganham destaque em 2026' },
+      { tipo:'paragrafo', texto:'As tendências tecnológicas de 2026 também impactam diretamente o mercado de trabalho. O perfil mais valorizado é o do profissional que consegue unir conhecimento técnico e visão de negócio.' },
+      { tipo:'paragrafo', texto:'Ganham espaço carreiras como:' },
+      { tipo:'lista', items:['AI Engineer, responsável por desenvolver e acompanhar sistemas de IA','Profissionais de compliance e segurança aplicada à tecnologia','Especialistas em governança de TI e IA'] },
+      { tipo:'paragrafo', texto:'Mais do que dominar ferramentas, o diferencial está em entender como a tecnologia gera valor real para as empresas.' },
+      { tipo:'h2', texto:'O que muda, na prática, para empresas e profissionais' },
+      { tipo:'paragrafo', texto:'O grande ponto de virada em 2026 é o foco em retorno sobre investimento. As empresas continuam investindo em tecnologia, mas agora priorizam projetos que entregam ganhos claros, como aumento de produtividade, redução de custos e melhoria de processos.' },
+      { tipo:'paragrafo', texto:'Soluções sem impacto mensurável tendem a perder espaço. Já iniciativas bem integradas ao negócio ganham prioridade e orçamento.' },
+      { tipo:'h2', texto:'Como se preparar para as tendências tecnológicas 2026' },
+      { tipo:'paragrafo', texto:'Entender as tendências é o primeiro passo. O segundo é investir no desenvolvimento das pessoas que vão operar, supervisionar e tomar decisões com base nessas tecnologias.' },
+      { tipo:'paragrafo', texto:'A XIO Academy oferece formação voltada para quem quer entender tecnologia de forma prática, aplicada aos negócios, acompanhando as transformações que já estão em curso. Conheça nossos planos e prepare-se para 2026.' },
+      { tipo:'cta', titulo:'Pronto para 2026?', subtitulo:'Domine IA aplicada com quem já está construindo o futuro.', botao:'Ver planos →' },
+      { tipo:'h2', texto:'FAQ — Tendências tecnológicas 2026' },
+      { tipo:'h3', texto:'Quais são as principais tendências tecnológicas para 2026?' },
+      { tipo:'paragrafo', texto:'As principais tendências tecnológicas para 2026 incluem a adoção de agentes autônomos de IA, uso de GraphRAG para respostas mais precisas, modelos de IA especializados e maior foco em governança e segurança.' },
+      { tipo:'h3', texto:'Por que a inteligência artificial entra em uma nova fase em 2026?' },
+      { tipo:'paragrafo', texto:'Porque as empresas passam a usar a IA em escala, integrada aos processos centrais do negócio, priorizando eficiência, controle e retorno sobre investimento.' },
+      { tipo:'h3', texto:'Como as tendências tecnológicas em 2026 impactam as carreiras?' },
+      { tipo:'paragrafo', texto:'Elas aumentam a demanda por profissionais que unem conhecimento técnico e visão estratégica, capazes de aplicar a tecnologia de forma prática no dia a dia das empresas.' },
+    ],
+  },
+  4: {
+    categoria:'Transformação Digital', autor:'Redação XIO Academy', data:'16/05/2025', tempoLeitura:'8 min',
+    titulo:'Educação 5.0: como a tecnologia impacta o novo modelo de aprendizado',
+    blocos:[
+      { tipo:'intro', texto:'Você já ouviu falar sobre educação 5.0? Ela surge como resposta a um cenário em que a tecnologia avança mais rápido do que as salas de aula conseguem acompanhar. Automação, inteligência artificial e novas formas de trabalho estão redesenhando a sociedade. E quem não se adapta, simplesmente fica para trás.\n\nNão dá mais para formar alunos somente com base em conteúdos que podem ser encontrados em segundos no Google. O diferencial, agora, está nas habilidades humanas: pensamento crítico, empatia, criatividade e colaboração. Competir com a tecnologia é impossível, então, nada mais inteligente do que incorporá-la ao processo de aprendizado, com propósito.\n\nOu seja, a educação 5.0 não é tendência. É necessidade. E entender como ela transforma o jeito de ensinar (e de aprender) pode ser o passo que falta para o preparo para o futuro. Continue lendo e descubra por que isso muda tudo.' },
+      { tipo:'h2', texto:'O que é Educação 5.0?' },
+      { tipo:'paragrafo', texto:'A Educação 5.0 é um modelo de ensino que vai além da simples adoção de tecnologia. Seu objetivo é preparar cidadãos críticos, éticos e conscientes, capazes de lidar com as transformações do mundo digital com responsabilidade e empatia.' },
+      { tipo:'paragrafo', texto:'Nesse contexto, a inteligência artificial na educação se torna uma aliada poderosa desde que usada com consciência. Ela permite personalizar o ensino, tornar o aprendizado mais dinâmico e interativo e auxiliar no desenvolvimento de habilidades técnicas e socioemocionais.' },
+      { tipo:'paragrafo', texto:'Mais do que formar profissionais para o mercado, a Educação 5.0 propõe formar seres humanos completos, aptos a viver e transformar o mundo com propósito.' },
+      { tipo:'h2', texto:'Qual a diferença entre Educação 4.0 e Educação 5.0?' },
+      { tipo:'paragrafo', texto:'Enquanto a Educação 4.0 nasceu com foco em preparar os alunos para a era digital e para as demandas do mercado 4.0, com uso de tecnologia, metodologias ativas e inovação, a Educação 5.0 dá um passo além: ela une alta tecnologia com valores humanos.' },
+      { tipo:'paragrafo', texto:'Na prática, isso significa que a Educação 4.0 foca em "como aprender com tecnologia", e a 5.0 foca em "como viver, trabalhar e se relacionar de forma ética e empática em um mundo tecnológico". É a integração entre dados e consciência social, algoritmos e empatia, inovação e propósito.' },
+      { tipo:'h2', texto:'Por que adotar a Educação 5.0?' },
+      { tipo:'paragrafo', texto:'Ao integrar tecnologia com propósito humano, esse modelo transforma a experiência educacional e prepara alunos e instituições para os desafios do presente e do futuro. Veja os principais benefícios:' },
+      { tipo:'h3', texto:'Aprendizado personalizado com apoio da tecnologia' },
+      { tipo:'paragrafo', texto:'A inteligência artificial e o uso estratégico de dados permitem adaptar os conteúdos ao ritmo, estilo e necessidades de cada aluno. Isso aumenta a retenção do conhecimento, respeita as individualidades e potencializa o desempenho de forma personalizada.' },
+      { tipo:'h3', texto:'Desenvolvimento de soft skills essenciais' },
+      { tipo:'paragrafo', texto:'Empatia, colaboração, pensamento crítico, criatividade e inteligência emocional passam a ser trabalhadas com a mesma importância das habilidades técnicas. Essas competências são fundamentais para formar cidadãos mais conscientes e preparados para interações humanas e profissionais.' },
+      { tipo:'h3', texto:'Preparação real para o futuro do trabalho' },
+      { tipo:'paragrafo', texto:'A Educação 5.0 integra competências técnicas com habilidades humanas, um diferencial cada vez mais valorizado em um mercado que exige profissionais completos, adaptáveis e inovadores. O foco está na formação de indivíduos prontos para atuar em cenários complexos e em constante transformação.' },
+      { tipo:'h3', texto:'Mais engajamento com metodologias ativas e digitais' },
+      { tipo:'paragrafo', texto:'Ao utilizar ferramentas digitais e abordagens interativas, como gamificação, projetos colaborativos e aprendizagem baseada em problemas, o aluno se torna protagonista do processo. Isso aumenta o interesse, a motivação e a participação em sala de aula.' },
+      { tipo:'h3', texto:'Inclusão e democratização do conhecimento' },
+      { tipo:'paragrafo', texto:'Com a tecnologia como aliada, a Educação 5.0 rompe barreiras geográficas, físicas e socioeconômicas. Recursos digitais ampliam o acesso à informação de qualidade, tornando o ensino mais acessível, inclusivo e equitativo para diferentes perfis de estudantes.' },
+      { tipo:'h2', texto:'Educação 5.0 na prática: como preparar alunos para o futuro' },
+      { tipo:'paragrafo', texto:'Para que a Educação 5.0 aconteça de fato, é necessário ir além da adoção de tecnologia. Isso envolve mudanças estruturais na forma de ensinar, aprender e se relacionar em sala de aula. Aqui estão cinco passos práticos para implementar esse novo modelo:' },
+      { tipo:'h3', texto:'1. Capacite educadores para o novo cenário da aprendizagem' },
+      { tipo:'paragrafo', texto:'Formações contínuas em tecnologias emergentes, metodologias ativas e cultura digital ajudam os professores a se tornarem facilitadores do conhecimento — e não apenas transmissores.' },
+      { tipo:'paragrafo', texto:'Benefício: aumenta o engajamento dos alunos e a confiança dos professores frente às mudanças.' },
+      { tipo:'h3', texto:'2. Use inteligência artificial para personalizar o ensino' },
+      { tipo:'paragrafo', texto:'Ferramentas baseadas em IA podem identificar lacunas de aprendizagem, adaptar conteúdos e acompanhar o progresso individual dos alunos em tempo real.' },
+      { tipo:'paragrafo', texto:'Benefício: promove uma aprendizagem mais inclusiva, eficiente e centrada nas necessidades de cada estudante.' },
+      { tipo:'h3', texto:'3. Estimule o pensamento crítico com projetos reais' },
+      { tipo:'paragrafo', texto:'Incentive atividades interdisciplinares, resolução de problemas do cotidiano e conexão com desafios da comunidade.' },
+      { tipo:'paragrafo', texto:'Benefício: desenvolve habilidades como análise, autonomia, empatia e visão sistêmica, essenciais no século XXI.' },
+      { tipo:'h3', texto:'4. Crie ambientes de experimentação e inovação' },
+      { tipo:'paragrafo', texto:'Monte laboratórios criativos, espaços makers ou até mesmo horários livres para explorar ideias, testar hipóteses e aprender com os erros.' },
+      { tipo:'paragrafo', texto:'Benefício: fomenta a criatividade, a curiosidade e o espírito empreendedor de alunos e professores.' },
+      { tipo:'h3', texto:'5. Integre valores humanos ao currículo' },
+      { tipo:'paragrafo', texto:'Educar para o futuro exige incluir temas como ética digital, sustentabilidade, diversidade e empatia como parte da formação básica.' },
+      { tipo:'paragrafo', texto:'Benefício: prepara cidadãos conscientes, colaborativos e preparados para lidar com as complexidades do mundo moderno.' },
+      { tipo:'h2', texto:'Uso da tecnologia na Educação 5.0' },
+      { tipo:'paragrafo', texto:'A tecnologia é um pilar essencial da Educação 5.0, mas deve ser usada com propósito e consciência. Ferramentas como realidade aumentada, inteligência artificial, plataformas adaptativas e ambientes virtuais de aprendizagem estão transformando a experiência educacional.' },
+      { tipo:'paragrafo', texto:'No entanto, especialistas alertam para os riscos de um uso desregulado: algoritmos podem perpetuar vieses sociais, dados sensíveis podem ser expostos e a conexão humana pode se perder se a tecnologia for o único foco.' },
+      { tipo:'paragrafo', texto:'Por isso, o letramento digital — que inclui desde o uso técnico das ferramentas até a consciência crítica sobre os algoritmos, proteção de dados e comportamento ético online — deve ser um pilar da formação desde o ensino básico.' },
+      { tipo:'h2', texto:'O futuro da educação passa por quem escolhe se reinventar agora' },
+      { tipo:'paragrafo', texto:'A educação 5.0 representa uma virada de chave no ensino: ela convida educadores, instituições e toda a sociedade a combinarem inovação com humanização, formando alunos mais preparados não só para o mercado, mas para os desafios complexos da vida.' },
+      { tipo:'paragrafo', texto:'Adotar inteligência artificial na educação, investir na formação contínua de docentes e desenvolver competências socioemocionais não são mais diferenciais, são pré-requisitos para as instituições de ensino continuarem sendo um espaço de transformação, inclusão e protagonismo.' },
+      { tipo:'paragrafo', texto:'Na XIO Academy, acreditamos nesse futuro e, por isso, nosso curso foi desenhado para formar profissionais que lideram essa mudança com visão prática, tecnológica e humana.' },
+      { tipo:'paragrafo', texto:'O futuro da educação será híbrido, ético e humano. E ele começa por você.' },
+      { tipo:'cta', titulo:'Pronto para liderar a mudança?', subtitulo:'Conheça nossos planos e dê o próximo passo nessa jornada.', botao:'Ver planos →' },
+    ],
+  },
+  5: {
+    categoria:'Carreira', autor:'Redação XIO Academy', data:'05/05/2025', tempoLeitura:'7 min',
+    titulo:'Diploma ou skills: o que o mercado de tecnologia valoriza em 2025?',
+    blocos:[
+      { tipo:'intro', texto:'Diploma ou skills? Com a inteligência artificial dominando o dia a dia, empresas se reinventando a todo momento e novas oportunidades surgindo em áreas que nem existiam até ontem, surge uma dúvida que pode mudar sua carreira: vale mais ter um diploma na mão ou dominar as habilidades comportamentais?\n\nSe você já sentiu que o mercado está pedindo mais do que certificados, você não está sozinho. Mas a resposta para essa pergunta é mais complexa (e surpreendente) do que parece.\n\nQuer entender o que realmente vai fazer diferença na sua trajetória? Continue lendo e descubra.' },
+      { tipo:'h2', texto:'Qual o papel do diploma tradicional em 2025?' },
+      { tipo:'paragrafo', texto:'O diploma continua sendo relevante, mas o seu peso isolado nunca foi tão questionado como agora. Para muitas vagas, especialmente em áreas técnicas como ciência de dados, engenharia de software e cibersegurança, a formação formal ainda é exigida, porém, como ponto de partida, não de chegada.' },
+      { tipo:'paragrafo', texto:'Hoje, o diploma é visto como uma porta de entrada, uma estruturação da base de conhecimento da pessoa, mas não é mais algo que sustenta a posição ou garante a evolução de carreira. O mercado está muito dinâmico.' },
+      { tipo:'paragrafo', texto:'Empresas estão mais interessadas no que o profissional faz do que apenas no que ele estudou. Certificações específicas, cursos rápidos e experiências práticas hoje carregam tanto valor quanto (ou mais que) uma graduação tradicional.' },
+      { tipo:'h2', texto:'E as soft skills, o que são?' },
+      { tipo:'paragrafo', texto:'Soft skills são aquelas competências ligadas ao comportamento, à inteligência emocional e à forma como um profissional lida com o mundo ao redor.' },
+      { tipo:'paragrafo', texto:'Enquanto as hard skills são habilidades técnicas específicas, como programar em Python, gerenciar bancos de dados, ou dominar cloud computing, as soft skills estão mais relacionadas a como você trabalha, aprende, se comunica e lidera.' },
+      { tipo:'paragrafo', texto:'Entre as soft skills mais procuradas em 2025 estão:' },
+      { tipo:'lista', items:['Pensamento crítico: saber analisar situações com profundidade e tomar decisões inteligentes','Resolução de problemas complexos: enfrentar desafios inesperados de maneira criativa e eficaz','Adaptabilidade a mudanças: conseguir se reinventar em ambientes de constante transformação','Comunicação eficiente: transmitir ideias com clareza, seja em reuniões presenciais ou no trabalho remoto','Inteligência emocional: entender e gerenciar suas emoções — e também reconhecer as dos outros','Trabalho colaborativo: atuar bem em equipe, mesmo com pessoas de perfis, culturas ou áreas diferentes'] },
+      { tipo:'paragrafo', texto:'Essas habilidades são fundamentais para que toda a tecnologia, por mais avançada que seja, seja aplicada de maneira humana, estratégica e inovadora. E quem domina essas competências, definitivamente, larga na frente no mercado.' },
+      { tipo:'h2', texto:'Por que as soft skills são tão importantes' },
+      { tipo:'paragrafo', texto:'À medida que a tecnologia automatiza tarefas repetitivas, o que realmente diferencia um profissional é a capacidade de pensar de forma criativa, colaborar efetivamente e liderar mudanças significativas.' },
+      { tipo:'paragrafo', texto:'Segundo o estudo Leadership Outlook 2025 do Evermonte Institute, 69,4% dos executivos entrevistados apontam a inteligência emocional como uma das soft skills mais relevantes para 2025. Além disso, resiliência e orientação a resultados também se destacam, com 63,4% de menções cada.' },
+      { tipo:'paragrafo', texto:'Essas habilidades são essenciais em um mercado em constante transformação, onde a capacidade de se adaptar rapidamente, aprender continuamente e colaborar de maneira eficiente é fundamental para o sucesso profissional.' },
+      { tipo:'paragrafo', texto:'Em outras palavras: as hard skills podem te colocar no jogo, mas são as soft skills que te fazem vencer.' },
+      { tipo:'h2', texto:'Afinal, diploma ou skills?' },
+      { tipo:'paragrafo', texto:'Hoje, uma análise de currículo é apenas o primeiro filtro. Os recrutadores mais estratégicos olham para:' },
+      { tipo:'lista', items:['Projetos práticos: GitHub, portfólios, hackathons e projetos paralelos contam muito','Capacidade de aprendizado contínuo: profissionais que mostram que não pararam no tempo','Comportamento em entrevistas: simulações de problemas, comunicação em grupo e dinâmicas de solução','Recomendações reais: depoimentos de colegas, professores ou ex-líderes sobre competências interpessoais','Alinhamento cultural: valores e propósito importam tanto quanto habilidades'] },
+      { tipo:'paragrafo', texto:'O diploma ainda é um fator de mobilidade social e de aumento de remuneração, mas hoje é o conjunto de competências, práticas e atitudes que define o sucesso profissional.' },
+      { tipo:'h2', texto:'Como profissionais podem ter mais sucesso no novo mercado' },
+      { tipo:'paragrafo', texto:'Se você quer se destacar em 2025 (e nos anos que virão), pense em três pilares:' },
+      { tipo:'lista', items:['Construa um portfólio sólido: cursos, projetos, contribuições em comunidades técnicas, provas práticas','Desenvolva suas soft skills intencionalmente: comunicação assertiva, feedbacks, liderança de pequenos projetos, autoconhecimento','Seja um aprendiz eterno: novas linguagens, novas metodologias, novos modelos de negócios — a curiosidade é seu maior ativo'] },
+      { tipo:'paragrafo', texto:'A prática faz parte do modelo de aprendizagem. Projetos práticos, desafios reais e constante adaptação são diferenciais para quem quer se manter relevante.' },
+      { tipo:'paragrafo', texto:'Não basta ser bom tecnicamente ou somente ser "gente boa". O mercado pede a integração de múltiplas competências.' },
+      { tipo:'h2', texto:'O profissional de sucesso é uma soma estratégica' },
+      { tipo:'paragrafo', texto:'O novo profissional é uma soma: diploma + soft skills + experiências práticas. Nenhum fator isolado sustenta uma carreira de sucesso no mercado de tecnologia atual.' },
+      { tipo:'paragrafo', texto:'Empresas querem pensadores críticos que sabem agir. Líderes querem colaboradores autônomos, mas que sabem jogar em equipe. Times querem profissionais técnicos, mas que sejam também humanos, estratégicos e inovadores. E no final das contas, não é sobre diploma ou soft skills. É sobre diploma e soft skills.' },
+      { tipo:'paragrafo', texto:'E se você quer ser esse profissional que nunca para de evoluir, conheça a XIO Academy. O primeiro passo para acelerar sua jornada com mais produtividade, dominando habilidades que o mercado já exige.' },
+      { tipo:'cta', titulo:'Comece a se destacar agora', subtitulo:'Una conhecimento técnico e habilidades práticas com a XIO Academy.', botao:'Ver planos →' },
+    ],
+  },
 };
 
 // ── Empresas Section ─────────────────────────────────────────────────────────
@@ -193,7 +503,7 @@ const FILTER_ON  = 'brightness(0) invert(1)';
 
 const MarqueeRow = ({ reverse, duration }) => (
   <div style={{ overflow:'hidden' }}>
-    <div style={{ display:'flex', alignItems:'center', width:'max-content', animation:`marquee ${duration}s linear infinite${reverse?' reverse':''}` }}>
+    <div data-marquee style={{ display:'flex', alignItems:'center', width:'max-content', animation:`marquee ${duration}s linear infinite${reverse?' reverse':''}` }}>
       {EMPRESAS_LISTA.map((emp,i)=>(
         <img key={i} src={emp.src} alt={emp.nome}
           style={{ height:52, width:'auto', objectFit:'contain', filter:FILTER_OFF, opacity:.6, transition:'opacity .3s', padding:'0 40px', display:'block', flexShrink:0 }}
@@ -252,7 +562,7 @@ const RecebeSection = () => (
         Tudo que precisamos ter quando<br />
         <em style={{ color:C.gold, fontStyle:'italic' }}>começamos do zero.</em>
       </h2>
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', border:`0.5px solid ${C.bd}`, borderRadius:4, overflow:'hidden' }}>
+      <div data-grid="features" style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', border:`0.5px solid ${C.bd}`, borderRadius:4, overflow:'hidden' }}>
         {FEATURES.map((f,i)=>(
           <div key={i}
             style={{
@@ -300,7 +610,7 @@ const PlanosSection = () => (
       </div>
 
       {/* Cards */}
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(300px,1fr))', gap:20, maxWidth:820, alignItems:'stretch' }}>
+      <div data-grid="planos" style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(300px,1fr))', gap:20, maxWidth:820, alignItems:'stretch' }}>
         {PLANOS.map(plano=>(
           <div key={plano.id}
             style={{
@@ -453,7 +763,7 @@ const GuaranteeSection = () => {
       {/* Ambient light */}
       <div style={{ position:'absolute', top:'50%', left:'28%', transform:'translate(-50%,-50%)', width:640, height:640, background:'radial-gradient(circle, rgba(200,169,110,.048) 0%, transparent 65%)', pointerEvents:'none' }} />
 
-      <div style={{ maxWidth:1100, margin:'0 auto', display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(320px,1fr))', gap:'clamp(64px,8vw,128px)', alignItems:'center' }}>
+      <div data-grid="guarantee" style={{ maxWidth:1100, margin:'0 auto', display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(320px,1fr))', gap:'clamp(64px,8vw,128px)', alignItems:'center' }}>
 
         {/* ── Seal ── */}
         <div style={{ display:'flex', justifyContent:'center', alignItems:'center', opacity:vis?1:0, transform:vis?'translateY(0)':'translateY(28px)', transition:'opacity .95s .1s, transform .95s .1s cubic-bezier(.16,1,.3,1)' }}>
@@ -576,7 +886,7 @@ const CredibilitySection = () => {
         </div>
 
         {/* ── Three pillars ── */}
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))', borderTop:`0.5px solid ${C.bd}` }}>
+        <div data-grid="pillars" style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))', borderTop:`0.5px solid ${C.bd}` }}>
           {PILLARS.map((p,i)=>(
             <div key={i} style={{
               position:'relative',
@@ -780,10 +1090,15 @@ const Footer = ({ setPage }) => (
       <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', flexWrap:'wrap', gap:16, marginBottom:24 }}>
         <Logo onClick={()=>setPage('landing')} />
         <div style={{ display:'flex', gap:24 }}>
-          {['Instagram','LinkedIn','YouTube'].map(s=>(
-            <span key={s} style={{ fontSize:'12px', color:C.ter, cursor:'pointer', transition:'color .15s' }}
+          {[
+            { label:'Instagram', href:'https://www.instagram.com' },
+            { label:'LinkedIn',  href:'#' },
+            { label:'YouTube',   href:'#' },
+          ].map(s=>(
+            <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
+              style={{ fontSize:'12px', color:C.ter, textDecoration:'none', transition:'color .15s' }}
               onMouseEnter={e=>e.currentTarget.style.color=C.sec}
-              onMouseLeave={e=>e.currentTarget.style.color=C.ter}>{s}</span>
+              onMouseLeave={e=>e.currentTarget.style.color=C.ter}>{s.label}</a>
           ))}
         </div>
       </div>
@@ -854,7 +1169,7 @@ const HeroCarousel = ({ setPage }) => {
         <span style={{ fontSize:'11px', letterSpacing:'.16em', color:C.gold, fontWeight:400 }}>O MÉTODO</span>
       </div>
       <h1 style={{ fontSize:'clamp(38px,7.5vw,78px)', fontWeight:300, lineHeight:1.07, letterSpacing:'-.025em', marginBottom:28 }}>
-        Três módulos.<br /><em style={{ color:C.gold, fontStyle:'italic' }}>Uma jornada</em> completa.
+        4 fases.<br /><em style={{ color:C.gold, fontStyle:'italic' }}>Resultado real</em>.
       </h1>
       <p style={{ fontSize:'clamp(15px,2vw,18px)', color:C.sec, lineHeight:1.72, maxWidth:520, marginBottom:44, fontWeight:300 }}>
         Da mentalidade de alta performance à execução de projetos reais — cada etapa foi projetada para gerar resultados concretos.
@@ -1033,7 +1348,7 @@ const LandingPage = ({ setPage }) => (
         </div>
         <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(240px,1fr))', gap:1, border:`0.5px solid ${C.bd}`, borderRadius:4, overflow:'hidden' }}>
           {[
-            { label:'O Método', title:'Uma progressão em 3 etapas.', desc:'Da mentalidade à execução — cada passo foi desenhado para levar ao próximo resultado.', p:'metodo' },
+            { label:'O Método', title:'4 fases. Zero código. Resultado real.', desc:'Da mentalidade à execução — cada passo foi desenhado para levar ao próximo resultado.', p:'metodo' },
             { label:'Resultados', title:'Quem entra no método não volta ao mesmo lugar.', desc:'Profissionais que aplicaram o método XIO e transformaram a forma como constroem resultado.', p:'resultados' },
             { label:'Sobre a XIO', title:'Uma escola construída na prática.', desc:'Conheça os fundadores e a missão por trás do método.', p:'sobre' },
             { label:'Conteúdo gratuito', title:'Comece antes de comprar.', desc:'Materiais gratuitos para você conhecer o método antes de decidir.', p:'gratuitos' },
@@ -1096,7 +1411,7 @@ const SobrePage = ({ setPage }) => {
 
       {/* Missão */}
       <section style={{ padding:'clamp(72px,10vw,120px) 28px' }}>
-        <div style={{ maxWidth:1160, margin:'0 auto', display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(280px,1fr))', gap:'clamp(40px,6vw,80px)' }}>
+        <div data-grid="fundadores" style={{ maxWidth:1160, margin:'0 auto', display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(280px,1fr))', gap:'clamp(40px,6vw,80px)' }}>
           <div>
             <p style={{ fontSize:'11px', letterSpacing:'.18em', color:C.gold, fontWeight:400, marginBottom:20, textTransform:'uppercase' }}>Missão</p>
             <blockquote style={{ fontSize:'clamp(20px,3.5vw,32px)', fontWeight:300, lineHeight:1.45, letterSpacing:'-.02em', marginBottom:24 }}>
@@ -1161,39 +1476,57 @@ const SobrePage = ({ setPage }) => {
 // ── Método Page ───────────────────────────────────────────────────────────────
 const MetodoPage = ({ setPage }) => (
   <div style={{ background:C.bg }}>
-    <PageHero label="O Método" title="Uma progressão em 3 etapas." subtitle="Cada módulo foi desenhado para levar você ao próximo nível — na sequência certa, sem atalhos, sem teoria vazia." />
+
+    {/* Hero */}
+    <section style={{ padding:'clamp(108px,14vw,152px) clamp(28px,6vw,80px) clamp(48px,6vw,72px)', maxWidth:1160, margin:'0 auto' }} className="fade-up">
+      <p style={{ fontSize:'10px', letterSpacing:'.24em', color:C.gold, textTransform:'uppercase', marginBottom:20, fontWeight:400 }}>O Método XIO</p>
+      <h1 style={{ fontFamily:SERIF, fontSize:'clamp(32px,5.5vw,60px)', fontWeight:400, lineHeight:1.1, letterSpacing:'-.025em', marginBottom:16 }}>
+        4 fases. Zero código.<br />
+        <em style={{ color:C.gold, fontStyle:'italic' }}>Resultado real.</em>
+      </h1>
+      <p style={{ fontSize:'clamp(15px,1.8vw,17px)', color:C.sec, lineHeight:1.75, maxWidth:540, fontWeight:300 }}>
+        Um caminho direto do zero ao primeiro sistema com IA — sem decorar sintaxe, sem 6 meses de teoria. Você aprende fazendo, no seu ritmo.
+      </p>
+    </section>
 
     <Div />
 
-    {/* Modules detail */}
-    <section style={{ padding:'clamp(72px,10vw,120px) 28px' }}>
-      <div style={{ maxWidth:1160, margin:'0 auto', display:'flex', flexDirection:'column', gap:1 }}>
-        {MODULES.map((mod,i)=>(
-          <div key={mod.id} style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(280px,1fr))', gap:'clamp(32px,6vw,80px)', padding:'clamp(40px,6vw,64px) 0', borderBottom:i<MODULES.length-1?`0.5px solid ${C.bd}`:'none', alignItems:'start' }}>
-            <div>
-              <span style={{ fontSize:'11px', color:C.gold, letterSpacing:'.18em', fontWeight:400 }}>{mod.num}</span>
-              <h2 style={{ fontSize:'clamp(24px,4vw,38px)', fontWeight:300, letterSpacing:'-.02em', lineHeight:1.15, marginTop:16, marginBottom:16 }}>{mod.title}</h2>
-              <p style={{ fontSize:'15px', color:C.sec, lineHeight:1.7 }}>{mod.desc}</p>
-            </div>
-            <div>
-              <p style={{ fontSize:'15px', color:C.sec, lineHeight:1.72, marginBottom:28, fontWeight:300 }}>{mod.detail}</p>
-              <p style={{ fontSize:'11px', color:C.ter, marginBottom:16, letterSpacing:'.06em', textTransform:'uppercase' }}>Materiais inclusos</p>
-              <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
-                {mod.files.map(f=>(
-                  <div key={f.id} style={{ display:'flex', alignItems:'center', gap:10, padding:'10px 14px', border:`0.5px solid ${C.bd}`, borderRadius:4, fontSize:'13px', color:C.sec }}>
-                    <span style={{ color:f.type==='video'?C.gold:C.ter, fontSize:'11px' }}>{f.type==='video'?'▶':'◻'}</span>
-                    {f.name}
+    {/* 4 fases grid */}
+    <section style={{ padding:'clamp(64px,9vw,108px) clamp(28px,6vw,80px)' }}>
+      <div style={{ maxWidth:1160, margin:'0 auto' }}>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(min(100%,240px),1fr))', gap:'1px', background:'rgba(255,255,255,.07)', borderRadius:8, overflow:'hidden' }}>
+          {MODULES.map((mod, i) => (
+            <div key={mod.id}
+              style={{ background:C.bg, padding:'clamp(24px,3vw,36px) clamp(20px,2.5vw,28px)', display:'flex', flexDirection:'column', position:'relative', transition:'background .2s' }}
+              onMouseEnter={e=>e.currentTarget.style.background='rgba(200,169,110,.025)'}
+              onMouseLeave={e=>e.currentTarget.style.background=C.bg}
+            >
+              {/* Arrow badge — desktop only */}
+              {i < MODULES.length-1 && (
+                <div className="hide-m" style={{ position:'absolute', right:-14, top:'50%', transform:'translateY(-50%)', width:28, height:28, borderRadius:'50%', background:C.bg, border:`0.5px solid rgba(200,169,110,.3)`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:'11px', color:'rgba(200,169,110,.6)', zIndex:2 }}>→</div>
+              )}
+              <div style={{ fontSize:48, fontWeight:300, color:C.gold, lineHeight:1, marginBottom:4, letterSpacing:'-.02em' }}>{mod.num}</div>
+              <div style={{ fontSize:'10px', letterSpacing:'.22em', color:C.gold, textTransform:'uppercase', marginBottom:14, fontWeight:400 }}>{mod.verbo}</div>
+              <h3 style={{ fontFamily:SERIF, fontSize:'20px', fontWeight:400, color:C.text, marginBottom:4, letterSpacing:'-.01em' }}>{mod.title}</h3>
+              <div style={{ fontSize:'11px', color:'rgba(255,255,255,.28)', letterSpacing:'.07em', marginBottom:18 }}>{mod.semana}</div>
+              <div style={{ width:24, height:'.5px', background:C.gold, opacity:.5, marginBottom:18 }} />
+              <p style={{ fontSize:'13px', color:C.sec, lineHeight:1.72, marginBottom:20, fontWeight:300 }}>{mod.desc}</p>
+              <div style={{ display:'flex', flexDirection:'column', gap:9, marginTop:'auto' }}>
+                {mod.topicos.map((t,j)=>(
+                  <div key={j} style={{ display:'flex', gap:10, alignItems:'flex-start' }}>
+                    <span style={{ color:C.gold, fontSize:'8px', marginTop:5, flexShrink:0 }}>●</span>
+                    <span style={{ fontSize:'12px', color:'rgba(255,255,255,.55)', lineHeight:1.5 }}>{t}</span>
                   </div>
                 ))}
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
 
-    {/* Why */}
-    <section style={{ borderTop:`0.5px solid ${C.bd}`, padding:'clamp(72px,10vw,120px) 28px', background:C.bg2 }}>
+    {/* Diferenciais */}
+    <section style={{ borderTop:`0.5px solid ${C.bd}`, padding:'clamp(72px,10vw,120px) clamp(28px,6vw,80px)', background:C.bg2 }}>
       <div style={{ maxWidth:1160, margin:'0 auto' }}>
         <div style={{ marginBottom:56 }}>
           <p style={{ fontSize:'11px', letterSpacing:'.18em', color:C.gold, fontWeight:400, marginBottom:14, textTransform:'uppercase' }}>Diferenciais</p>
@@ -1216,7 +1549,9 @@ const MetodoPage = ({ setPage }) => (
 
     <section style={{ borderTop:`0.5px solid ${C.bd}`, padding:'clamp(72px,10vw,120px) 28px' }}>
       <div style={{ maxWidth:560, margin:'0 auto', textAlign:'center' }}>
-        <h2 style={{ fontSize:'clamp(24px,4vw,40px)', fontWeight:300, letterSpacing:'-.02em', lineHeight:1.2, marginBottom:20 }}>Comece sua jornada hoje.</h2>
+        <h2 style={{ fontFamily:SERIF, fontSize:'clamp(24px,4vw,40px)', fontWeight:400, letterSpacing:'-.02em', lineHeight:1.2, marginBottom:20 }}>
+          Comece sua jornada <em style={{ color:C.gold, fontStyle:'italic' }}>hoje</em>.
+        </h2>
         <GoldBtn onClick={()=>setPage('planos')} style={{ padding:'13px 36px', fontSize:'13px', letterSpacing:'.08em' }}>Garantir minha vaga</GoldBtn>
       </div>
     </section>
@@ -1282,7 +1617,7 @@ const ResultadosPage = ({ setPage }) => (
 );
 
 // ── Gratuitos Page ────────────────────────────────────────────────────────────
-const GratuitosPage = ({ setPage }) => {
+const GratuitosPage = ({ setPage, navegar }) => {
   const [catAtiva, setCatAtiva] = useState('Todos');
   const [email, setEmail]       = useState('');
   const [inscrito, setInscrito] = useState(false);
@@ -1308,10 +1643,11 @@ const GratuitosPage = ({ setPage }) => {
   };
 
   const CardGrande = ({ c }) => (
-    <div onClick={() => alert('Conteúdo em produção — em breve!')}
+    <div onClick={() => ARTIGOS[c.id] ? navegar('artigo', c.id) : alert('Conteúdo em produção — em breve!')}
       style={{
         position:'relative', borderRadius:16, overflow:'hidden', cursor:'pointer',
-        aspectRatio:'16/9', background:CARD_PLACEHOLDER[c.categoria]||'#111',
+        aspectRatio:'16/9',
+        ...(c.imagem ? { backgroundImage:`url('${c.imagem}')`, backgroundSize:'cover', backgroundPosition:'center center' } : { background:CARD_PLACEHOLDER[c.categoria]||'#111' }),
         border:'0.5px solid rgba(255,255,255,.05)',
         boxShadow:'0 4px 24px rgba(0,0,0,.28)',
         transition:'transform .45s cubic-bezier(.16,1,.3,1), box-shadow .45s, border-color .3s',
@@ -1333,10 +1669,20 @@ const GratuitosPage = ({ setPage }) => {
   );
 
   const CardPequeno = ({ c }) => (
-    <div onClick={() => alert('Conteúdo em produção — em breve!')}
+    <div
+      onClick={() => {
+        if (c.statusArtigo === 'em-breve') {
+          alert('Em breve! Este conteúdo está sendo preparado. Inscreva-se na newsletter para ser avisado.');
+        } else if (ARTIGOS[c.id]) {
+          navegar('artigo', c.id);
+        } else {
+          alert('Conteúdo em produção — em breve!');
+        }
+      }}
       style={{
         position:'relative', borderRadius:14, overflow:'hidden', cursor:'pointer',
-        aspectRatio:'4/3', background:CARD_PLACEHOLDER[c.categoria]||'#111',
+        aspectRatio:'4/3',
+        ...(c.imagem ? { backgroundImage:`url('${c.imagem}')`, backgroundSize:'cover', backgroundPosition:'center center' } : { background:CARD_GRAD[c.id]||CARD_PLACEHOLDER[c.categoria]||'#111' }),
         border:'0.5px solid rgba(255,255,255,.05)',
         boxShadow:'0 4px 24px rgba(0,0,0,.28)',
         transition:'transform .45s cubic-bezier(.16,1,.3,1), box-shadow .45s, border-color .3s',
@@ -1345,6 +1691,12 @@ const GratuitosPage = ({ setPage }) => {
       onMouseEnter={e=>hov(true,  e.currentTarget)}
       onMouseLeave={e=>hov(false, e.currentTarget)}
     >
+      {/* Badge "Em breve" */}
+      {c.statusArtigo === 'em-breve' && (
+        <div style={{ position:'absolute', top:12, right:12, background:'rgba(200,169,110,.9)', color:'#0A0A0A', fontSize:'9px', fontWeight:600, letterSpacing:'.15em', padding:'4px 10px', borderRadius:2, textTransform:'uppercase', zIndex:3 }}>
+          Em breve
+        </div>
+      )}
       <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top, rgba(5,5,5,0.97) 0%, rgba(5,5,5,0.6) 45%, transparent 100%)', zIndex:1 }} />
       <div style={{ position:'absolute', bottom:0, left:0, right:0, padding:'20px 22px', zIndex:2 }}>
         <span style={{ display:'inline-block', color:C.gold, fontSize:'8.5px', letterSpacing:'.2em', textTransform:'uppercase', marginBottom:10, fontWeight:400 }}>{c.categoria}</span>
@@ -1402,12 +1754,12 @@ const GratuitosPage = ({ setPage }) => {
         ) : (
           <>
             {grandes.length > 0 && (
-              <div style={{ display:'flex', gap:20, flexWrap:'wrap', marginBottom:20 }}>
+              <div data-flex="conteudos-grandes" style={{ display:'flex', gap:20, flexWrap:'wrap', marginBottom:20 }}>
                 {grandes.map(c => <CardGrande key={c.id} c={c} />)}
               </div>
             )}
             {pequenos.length > 0 && (
-              <div style={{ display:'flex', gap:20, flexWrap:'wrap' }}>
+              <div data-flex="conteudos-pequenos" style={{ display:'flex', gap:20, flexWrap:'wrap' }}>
                 {pequenos.map(c => <CardPequeno key={c.id} c={c} />)}
               </div>
             )}
@@ -1423,12 +1775,12 @@ const GratuitosPage = ({ setPage }) => {
             Receba conteúdos novos<br />direto no seu email.
           </h3>
           <p style={{ fontSize:'14px', color:'rgba(255,255,255,.35)', lineHeight:1.7, marginBottom:40, fontWeight:300, maxWidth:360, margin:'0 auto 36px' }}>
-            Toda semana, um conteúdo exclusivo sobre IA aplicada.
+            Quer ser avisado quando novos conteúdos saírem? Inscreva-se na nossa newsletter.
           </p>
           {inscrito ? (
             <p style={{ fontFamily:SERIF, fontSize:'15px', color:C.gold, fontStyle:'italic' }}>Inscrição confirmada. Obrigado!</p>
           ) : (
-            <div style={{ display:'flex', gap:10, justifyContent:'center', flexWrap:'wrap', maxWidth:420, margin:'0 auto' }}>
+            <div data-newsletter-row style={{ display:'flex', gap:10, justifyContent:'center', flexWrap:'wrap', maxWidth:420, margin:'0 auto' }}>
               <input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="seu@email.com"
                 onFocus={()=>setEmailFocus(true)} onBlur={()=>setEmailFocus(false)}
                 style={{ flex:'1 1 200px', padding:'13px 18px', background:'rgba(255,255,255,.04)', border:`0.5px solid ${emailFocus?'rgba(200,169,110,.5)':'rgba(255,255,255,.1)'}`, borderRadius:8, color:'#f0f0f0', fontSize:'14px', fontWeight:300, fontFamily:'inherit', outline:'none', transition:'border-color .2s' }}
@@ -1496,7 +1848,7 @@ const FaqPage = ({ setPage }) => (
         <h2 style={{ fontSize:'clamp(22px,3.5vw,36px)', fontWeight:300, letterSpacing:'-.02em', lineHeight:1.2, marginBottom:20 }}>Fale diretamente com a nossa equipe.</h2>
         <p style={{ fontSize:'15px', color:C.sec, lineHeight:1.7, marginBottom:36 }}>Respondemos em até 24 horas em dias úteis.</p>
         <div style={{ display:'flex', gap:12, justifyContent:'center', flexWrap:'wrap' }}>
-          <GoldBtn onClick={()=>window.location.href='mailto:contato@xioacademy.com.br'} style={{ padding:'12px 28px', fontSize:'13px', letterSpacing:'.06em' }}>
+          <GoldBtn onClick={()=>window.location.href='mailto:technologiesxio@gmail.com'} style={{ padding:'12px 28px', fontSize:'13px', letterSpacing:'.06em' }}>
             Enviar e-mail
           </GoldBtn>
           <GhostBtn onClick={()=>setPage('planos')}>Ver o método →</GhostBtn>
@@ -1509,10 +1861,153 @@ const FaqPage = ({ setPage }) => (
 );
 
 // ── App ───────────────────────────────────────────────────────────────────────
+// ── Artigo Page ───────────────────────────────────────────────────────────────
+const ArtigoPage = ({ setPage, artigoId }) => {
+  const artigo = ARTIGOS[artigoId];
+  if (!artigo) return null;
+
+  const renderBloco = (bloco, i) => {
+    switch (bloco.tipo) {
+      case 'paragrafo':
+        return <p key={i} style={{ fontSize:16, lineHeight:1.82, color:'rgba(255,255,255,.74)', marginBottom:22, fontWeight:300 }}>{bloco.texto}</p>;
+      case 'h2':
+        return <h2 key={i} style={{ fontFamily:SERIF, fontSize:'clamp(22px,2.8vw,28px)', fontWeight:400, color:C.text, lineHeight:1.3, marginTop:52, marginBottom:18, letterSpacing:'-.01em' }}>{bloco.texto}</h2>;
+      case 'h3':
+        return <h3 key={i} style={{ fontFamily:SERIF, fontSize:'clamp(17px,2vw,21px)', fontWeight:400, color:C.gold, lineHeight:1.3, marginTop:38, marginBottom:12, letterSpacing:'-.01em' }}>{bloco.texto}</h3>;
+      case 'prompt':
+        return (
+          <div key={i} style={{ background:'rgba(200,169,110,.06)', borderLeft:`2px solid ${C.gold}`, padding:'20px 26px', margin:'24px 0', borderRadius:'0 6px 6px 0' }}>
+            <p style={{ fontSize:15, fontStyle:'italic', color:'rgba(255,255,255,.86)', lineHeight:1.75, margin:0, whiteSpace:'pre-line' }}>{bloco.texto}</p>
+          </div>
+        );
+      case 'lista':
+        return (
+          <ul key={i} style={{ padding:0, margin:'16px 0 24px', listStyle:'none' }}>
+            {bloco.items.map((item, j) => (
+              <li key={j} style={{ display:'flex', gap:12, alignItems:'flex-start', marginBottom:10 }}>
+                <span style={{ color:C.gold, fontSize:11, marginTop:5, flexShrink:0 }}>✓</span>
+                <span style={{ fontSize:15, color:'rgba(255,255,255,.72)', lineHeight:1.65, fontWeight:300 }}>{item}</span>
+              </li>
+            ))}
+          </ul>
+        );
+      case 'intro':
+        return (
+          <div key={i} style={{ margin:'0 0 32px', paddingBottom:32, borderBottom:`0.5px solid rgba(255,255,255,.07)` }}>
+            {bloco.texto.split('\n\n').map((p, j) => (
+              <p key={j} style={{ fontSize:'clamp(16px,1.6vw,18px)', lineHeight:1.82, color:'rgba(255,255,255,.68)', marginBottom:j < bloco.texto.split('\n\n').length-1 ? 20 : 0, fontWeight:300 }}>{p}</p>
+            ))}
+          </div>
+        );
+      case 'cta':
+        return (
+          <div key={i} style={{ margin:'52px 0 0', padding:'36px 40px', background:'rgba(200,169,110,.05)', border:`0.5px solid rgba(200,169,110,.22)`, borderRadius:10, textAlign:'center' }}>
+            <p style={{ fontSize:'10px', letterSpacing:'.22em', color:C.gold, textTransform:'uppercase', marginBottom:14, fontWeight:400 }}>XIO Academy</p>
+            <h3 style={{ fontFamily:SERIF, fontSize:'clamp(20px,2.5vw,26px)', fontWeight:400, color:C.text, lineHeight:1.25, marginBottom:12 }}>
+              {bloco.titulo || 'Quer aprender IA aplicada na prática?'}
+            </h3>
+            <p style={{ fontSize:14, color:C.sec, lineHeight:1.7, marginBottom:28, fontWeight:300 }}>
+              {bloco.subtitulo || 'A XIO Academy ensina o caminho completo — do primeiro prompt ao primeiro cliente usando IA.'}
+            </p>
+            <GoldBtn onClick={()=>setPage('planos')} style={{ padding:'12px 32px', fontSize:'12px', letterSpacing:'.08em' }}>
+              {bloco.botao || 'Ver planos →'}
+            </GoldBtn>
+          </div>
+        );
+      default: return null;
+    }
+  };
+
+  const relacionados = CONTEUDOS.filter(c => c.id !== artigoId).slice(0, 3);
+
+  return (
+    <div style={{ background:'#050505', minHeight:'100vh' }}>
+
+      {/* Ambient glow */}
+      <div style={{ position:'fixed', top:'10%', left:'50%', transform:'translateX(-50%)', width:700, height:500, background:'radial-gradient(ellipse, rgba(200,169,110,.03) 0%, transparent 68%)', pointerEvents:'none', zIndex:0 }} />
+
+      <div style={{ maxWidth:800, margin:'0 auto', padding:'clamp(100px,12vw,140px) clamp(28px,5vw,48px) 0', position:'relative', zIndex:1 }}>
+
+        {/* Breadcrumb */}
+        <button onClick={()=>setPage('gratuitos')}
+          style={{ background:'none', border:'none', cursor:'pointer', fontFamily:'inherit', display:'inline-flex', alignItems:'center', gap:8, marginBottom:40, color:'rgba(255,255,255,.45)', fontSize:12, letterSpacing:'.04em', transition:'color .2s', padding:0 }}
+          onMouseEnter={e=>e.currentTarget.style.color=C.gold}
+          onMouseLeave={e=>e.currentTarget.style.color='rgba(255,255,255,.45)'}
+        >
+          ← Voltar para conteúdos gratuitos
+        </button>
+
+        {/* Header */}
+        <header style={{ marginBottom:40 }}>
+          <span style={{ display:'inline-block', color:C.gold, fontSize:'9px', letterSpacing:'.2em', textTransform:'uppercase', marginBottom:18, fontWeight:400 }}>{artigo.categoria}</span>
+          <h1 style={{ fontFamily:SERIF, fontSize:'clamp(28px,4.5vw,48px)', fontWeight:400, color:'#f5f5f5', lineHeight:1.12, letterSpacing:'-.02em', marginBottom:24 }}>{artigo.titulo}</h1>
+          <div style={{ display:'flex', alignItems:'center', flexWrap:'wrap', gap:6, marginBottom:32 }}>
+            <span style={{ fontSize:12, color:'rgba(255,255,255,.38)', fontWeight:300 }}>Por {artigo.autor}</span>
+            <span style={{ color:'rgba(200,169,110,.4)', fontSize:10 }}>◆</span>
+            <span style={{ fontSize:12, color:'rgba(255,255,255,.38)', fontWeight:300 }}>{artigo.data}</span>
+            <span style={{ color:'rgba(200,169,110,.4)', fontSize:10 }}>◆</span>
+            <span style={{ fontSize:12, color:'rgba(255,255,255,.38)', fontWeight:300 }}>{artigo.tempoLeitura} de leitura</span>
+          </div>
+          <div style={{ width:60, height:1, background:`linear-gradient(to right, ${C.gold}, transparent)`, opacity:.7 }} />
+        </header>
+
+        {/* Imagem destaque placeholder */}
+        <div style={{ width:'100%', aspectRatio:'16/9', background:CARD_PLACEHOLDER[artigo.categoria]||'#111', borderRadius:10, marginBottom:48, overflow:'hidden', position:'relative' }}>
+          <div style={{ position:'absolute', inset:0, background:'linear-gradient(135deg, rgba(200,169,110,.08) 0%, transparent 60%)' }} />
+          <div style={{ position:'absolute', bottom:20, left:24, fontSize:'10px', letterSpacing:'.2em', color:'rgba(200,169,110,.5)', textTransform:'uppercase' }}>{artigo.categoria}</div>
+        </div>
+
+        {/* Corpo do artigo */}
+        <article style={{ marginBottom:72 }}>
+          {artigo.blocos.map((bloco, i) => renderBloco(bloco, i))}
+        </article>
+
+        {/* Autor */}
+        <div style={{ display:'flex', alignItems:'center', gap:20, padding:'28px 32px', background:'rgba(255,255,255,.025)', borderRadius:10, border:'0.5px solid rgba(255,255,255,.06)', marginBottom:72 }}>
+          <div style={{ width:52, height:52, borderRadius:'50%', background:`linear-gradient(135deg,${C.gold},#8a6a2e)`, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, fontSize:16, fontWeight:400, color:'#0a0a0a', fontFamily:SERIF }}>IM</div>
+          <div>
+            <p style={{ fontSize:14, color:C.text, fontWeight:400, marginBottom:4 }}>Iuri Moreira</p>
+            <p style={{ fontSize:12, color:'rgba(255,255,255,.4)', fontWeight:300, lineHeight:1.6 }}>Co-fundador da XIO Academy · Especialista em IA aplicada a negócios e educação.</p>
+          </div>
+        </div>
+
+        {/* Relacionados */}
+        {relacionados.length > 0 && (
+          <section style={{ marginBottom:80 }}>
+            <p style={{ fontSize:'10px', letterSpacing:'.22em', color:'rgba(255,255,255,.35)', textTransform:'uppercase', marginBottom:24, fontWeight:400 }}>Continue lendo</p>
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(220px,1fr))', gap:16 }}>
+              {relacionados.map(c => (
+                <div key={c.id}
+                  onClick={()=>setPage('gratuitos')}
+                  style={{ position:'relative', borderRadius:10, overflow:'hidden', cursor:'pointer', aspectRatio:'4/3', background:CARD_PLACEHOLDER[c.categoria]||'#111', border:'0.5px solid rgba(255,255,255,.05)', transition:'transform .35s, box-shadow .35s' }}
+                  onMouseEnter={e=>{ e.currentTarget.style.transform='translateY(-4px)'; e.currentTarget.style.boxShadow='0 16px 48px rgba(0,0,0,.5), 0 0 24px rgba(200,169,110,.06)'; }}
+                  onMouseLeave={e=>{ e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow='none'; }}
+                >
+                  <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top, rgba(5,5,5,.95) 0%, transparent 60%)', zIndex:1 }} />
+                  <div style={{ position:'absolute', bottom:0, left:0, right:0, padding:'16px 18px', zIndex:2 }}>
+                    <span style={{ display:'block', fontSize:'8.5px', letterSpacing:'.18em', color:C.gold, textTransform:'uppercase', marginBottom:6 }}>{c.categoria}</span>
+                    <p style={{ fontFamily:SERIF, fontSize:13, color:'#f0f0f0', lineHeight:1.3, fontWeight:400 }}>{c.titulo}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+      </div>
+
+      <Footer setPage={setPage} />
+    </div>
+  );
+};
+
 function App() {
-  const [page, setPage] = useState('landing');
+  const [page, setPage]           = useState('landing');
+  const [artigoAtivo, setArtigoAtivo] = useState(null);
 
   useEffect(() => { window.scrollTo(0, 0); }, [page]);
+
+  const navegar = (p, id=null) => { setPage(p); if(id) setArtigoAtivo(id); };
 
   return (
     <div style={{ minHeight:'100vh', background:C.bg }}>
@@ -1522,9 +2017,10 @@ function App() {
         {page==='sobre'      && <SobrePage      setPage={setPage} />}
         {page==='metodo'     && <MetodoPage     setPage={setPage} />}
         {page==='resultados' && <ResultadosPage setPage={setPage} />}
-        {page==='gratuitos'  && <GratuitosPage  setPage={setPage} />}
+        {page==='gratuitos'  && <GratuitosPage  setPage={setPage} navegar={navegar} />}
         {page==='faq'        && <FaqPage        setPage={setPage} />}
         {page==='planos'     && <PlanosPage     setPage={setPage} />}
+        {page==='artigo'     && <ArtigoPage     setPage={setPage} artigoId={artigoAtivo} />}
       </div>
     </div>
   );
